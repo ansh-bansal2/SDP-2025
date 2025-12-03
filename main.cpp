@@ -8,6 +8,7 @@ int originalHeight = 0;
 int targetHeight = 0;
 FEHImage rockGuy;
 FEHImage treeGirl;
+//hi
 
 class player{
     private:
