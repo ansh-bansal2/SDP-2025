@@ -10,6 +10,210 @@ FEHImage rockGuy;
 FEHImage treeGirl;
 //hi
 
+void MainMenu(){
+   
+    FEHImage MainMenuBack; // Declare background image
+    MainMenuBack.Open("MainMenuBack_resized.png"); // Open Image
+    MainMenuBack.Draw(0, 0);
+    // Close the image
+    MainMenuBack.Close();
+
+    LCD.SetFontColor(LIGHTGOLDENRODYELLOW); // Add level select button
+    LCD.FillRectangle(45,5,240,40);
+    LCD.SetFontColor(DARKGOLDENROD);
+    LCD.FillRectangle(45, 40, 240, 5);
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Level Select (play)", 50, 15);
+    LCD.Update(); 
+
+    LCD.SetFontColor(LIGHTGOLDENRODYELLOW); // Statistics button
+    LCD.FillRectangle(45, 50, 240, 40);
+    LCD.SetFontColor(DARKGOLDENROD);
+    LCD.FillRectangle(45, 85, 240, 5);
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Statistics", 105, 60);
+
+    LCD.SetFontColor(LIGHTGOLDENRODYELLOW); // Instructions button
+    LCD.FillRectangle(45, 95, 240, 40);
+    LCD.SetFontColor(DARKGOLDENROD);
+    LCD.FillRectangle(45, 130, 240, 5);
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Instructions", 95, 105);
+
+    LCD.SetFontColor(LIGHTGOLDENRODYELLOW); // Instructions button
+    LCD.FillRectangle(45, 140, 240, 40);
+    LCD.SetFontColor(DARKGOLDENROD);
+    LCD.FillRectangle(45, 175, 240, 5);
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Credits", 127, 150);
+    
+    LCD.SetFontColor(BLUE);
+    LCD.WriteAt("TITLE", 140, 195);
+    LCD.Update();
+}
+
+void StatsButton(){
+float x, y, trash1, trash2;
+bool b=true;
+    LCD.Clear(BLACK);
+    LCD.SetFontColor(WHITE);
+    LCD.WriteAt("Statistics:", 0, 0);
+    LCD.WriteAt("Time to Complete:", 0, 20);
+    LCD.WriteAt("100 Seconds", 0, 40);
+    LCD.FillRectangle(250, 5, 60, 35); // Back button
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Back", 255, 12);
+    
+    while(b){
+        while(!LCD.Touch(&x, &y)){};
+        while(LCD.Touch(&trash1, &trash2)){}
+        if (x >= 250 && y >= 5){
+                if (x <= 280 && y <= 40){
+                    MainMenu();
+                    b=false;
+                }
+    }
+}
+}
+
+void PlayButton(){ // Function to create a stats screen with back button
+    float x, y, trash1, trash2;
+    bool a=true, level1Select = true;
+    LCD.Clear(BLACK);
+    FEHImage MainMenuBack; // Declare background image
+    MainMenuBack.Open("MainMenuBack_resized.png"); // Open Image
+    MainMenuBack.Draw(0, 0);
+    // Close the image
+    MainMenuBack.Close();
+
+    LCD.SetFontColor(LIGHTGOLDENRODYELLOW);
+    LCD.FillRectangle(4, 5, 90, 35);
+    LCD.SetFontColor(DARKGOLDENROD);
+    LCD.FillRectangle(4, 35, 90, 5);
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Level 1", 7, 12);
+    LCD.SetFontColor(DARKGRAY);
+    LCD.FillRectangle(250, 5, 60, 35); // Back button
+    LCD.SetFontColor(GRAY);
+    LCD.FillRectangle(250, 35, 60, 5);
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Back", 255, 12);
+
+    while (level1Select){  // ADD LEVEL 1 INFO HERE
+        while(!LCD.Touch(&x, &y)){};
+    while(LCD.Touch(&trash1, &trash2)){};
+    if (x >= 4 && y >= 5 && x <= 94 && y <= 40){
+        FEHImage Level1Background;
+        Level1Background.Open("level1Background.png");
+        Level1Background.Draw(0, 0); 
+        Level1Background.Close();
+        LCD.SetFontColor(WHITE);
+        LCD.Write("LEVEL 1 HERE");
+        level1Select = false;
+    }
+    }
+    
+    while(a){
+    while(!LCD.Touch(&x, &y)){};
+    while(LCD.Touch(&trash1, &trash2)){};
+    if (x >= 250 && y >= 5){
+                if (x <= 280 && y <= 40){
+                    MainMenu();
+                    a=false;
+                }
+            }
+        }
+}
+
+void InstructionsButton(){
+float y1, z, ytrash, ztrash;
+bool c = true;
+    LCD.Clear(BLACK); // Draw instructions screen
+    LCD.SetFontColor(WHITE);
+    LCD.WriteAt("Instructions:", 0, 0);
+    LCD.WriteAt("Use WASD to control character 1,", 0, 20); // Write instructions here
+    LCD.WriteAt(" arrow keys to control character 2.", 0, 40);
+    LCD.WriteAt("Both players must", 0, 60);
+    LCD.WriteAt("press one of the two buttons", 0, 80);
+    LCD.WriteAt("Buttons must be pressed at", 0, 100);
+    LCD.WriteAt("the same time to win.", 0 ,120);
+    LCD.FillRectangle(250, 5, 60, 35); // Back button
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Back", 255, 12);
+
+    while (c){
+        while(!LCD.Touch(&y1, &z)){}
+        while(LCD.Touch(&ytrash, &ztrash)){}
+        if (y1 >= 250 && z >= 5){
+                if (y1 <= 280 && z <= 40){
+                    MainMenu();
+                    c=false;
+                }
+            }
+    }
+}
+
+void CreditsButton(){
+    float y1, z, ytrash, ztrash;
+    bool c = true;
+    LCD.Clear(BLACK); // Draw play game screen
+    LCD.WriteAt("Credits:", 0, 0); // Write credits here
+    LCD.WriteAt("Ben Choma and Ansh Bansal", 0, 40);
+    LCD.FillRectangle(250, 5, 60, 35); 
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Back", 255, 12);
+    
+    while (c){
+        while(!LCD.Touch(&y1, &z)){}
+        while(LCD.Touch(&ytrash, &ztrash)){}
+        if (y1 >= 250 && z >= 5){
+                if (y1 <= 280 && z <= 40){
+                    MainMenu();
+                    c=false;
+                }
+            }
+    }
+}
+
+void MenuTouch(){
+
+float x_pos, y_pos;
+float x_trash, y_trash;
+bool FrontMenu, IntMenu;
+while(true){
+    //LCD.ClearBuffer();
+    LCD.SetFontColor(WHITE);
+    while(!LCD.Touch(&x_pos,&y_pos)) {}; // Register touch
+    while(LCD.Touch(&x_trash,&y_trash)) {}; // Register touch release
+
+    if((x_pos >= 45) && (y_pos >= 5)){ // Play game button pressed
+        if (x_pos <= 310 && y_pos <= 45){
+           PlayButton();
+
+        }
+    }
+    if((x_pos >= 45) && (y_pos >= 50)){ // Statistics button pressed
+       if (x_pos <= 310 && y_pos <= 90){
+       StatsButton();}
+    }
+
+
+    if((x_pos >= 45) && (y_pos >= 95)){ // Instructions button pressed
+        if (x_pos <= 310 && y_pos <= 135){
+                InstructionsButton();
+        }
+    }
+
+    if((x_pos >= 45) && (y_pos >= 140)){ // Credits button pressed
+        if (x_pos <= 310 && y_pos <= 180){
+       CreditsButton();
+    }
+}
+
+}
+
+}
+
 class player{
     private:
     int deaths;
