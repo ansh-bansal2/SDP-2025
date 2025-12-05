@@ -9,8 +9,22 @@ int p1originalHeight = 0;
 int p1targetHeight = 0;
 int p2originalHeight = 0;
 int p2targetHeight = 0;
+int x1 = 100, y1 = 180;
+int x2 = 150, y2 = 180;
 FEHImage rockGuy;
 FEHImage treeGirl;
+
+void PlayerOneMovement(int *x1,int *y1);
+    bool playerOneJump = false;
+    bool playerOneFall = false;
+void PlayerTwoMovement(int *x2, int *y2);
+    bool playerTwoJump = false;
+    bool playerTwoFall = false;
+void createPlayers(int *p1startx, int *p1starty, int *p2startx, int *p2starty);
+
+void collison(int *xpos, int *ypos, int *origHeight,bool jumpStatus,bool *fallStatus);
+
+bool onPlatform = false;
 
 #include <time.h>
 FEHImage MainMenuBack;
@@ -107,6 +121,8 @@ void Level1Select(){
         
         level1 = false;
         }
+        createPlayers(&x1,&y1,&x2,&y2);
+
 time_t end = time(NULL); // Timer to compute time spend on level 1
 level1Time = end - start;
 printf("%i", level1Time);
@@ -391,17 +407,6 @@ class player{
     int getJumps();
 };
 
-void PlayerOneMovement(int *x1,int *y1);
-    bool playerOneJump = false;
-    bool playerOneFall = false;
-void PlayerTwoMovement(int *x2, int *y2);
-    bool playerTwoJump = false;
-    bool playerTwoFall = false;
-void createPlayers(int p1startx, int p1starty, int p2startx, int p2starty);
-
-void collison(int *xpos, int *ypos, int *origHeight,bool jumpStatus,bool *fallStatus);
-
-bool onPlatform = false;
 
 void PlayerOneMovement(int *x1,int *y1){
 
@@ -547,13 +552,13 @@ void PlayerTwoMovement(int *x2,int *y2){
     }
 }
     
-void createPlayers(int x1, int y1, int x2, int y2){
+void createPlayers(int *x1, int *y1, int *x2, int *y2){
     //Creates players at location, should be called in the level select function.
     //50 x 60 pixels
     rockGuy.Open("Rock_guy_front.png");
     treeGirl.Open("Tree_Girl_Front.png");
-    rockGuy.Draw(x1,y1);
-    treeGirl.Draw(x2,y2);
+    rockGuy.Draw(*x1,*y1);
+    treeGirl.Draw(*x2,*y2);
     LCD.Update();
 }
 
@@ -582,25 +587,17 @@ void collison(int *x, int *y, int *originalHeight,bool isJumping,bool *fallStatu
 
 }
 int main(){
-    //starting positions 
-    int x1 = 100, y1 = 180;
-    int x2 = 150, y2 = 180;
-    int r = 10;
+    MainMenu();    //starting positions 
     player p1; //rockguy
     player p2; //treegirl
     //Creates players
-    createPlayers(x1,y1,x2,y2);
     while(1){
+        printf("a");
         LCD.Clear(BLACK); //will need to be changed once the new backgeround is added 
         PlayerOneMovement(&x1,&y1);
         PlayerTwoMovement(&x2,&y2);
         rockGuy.Draw(x1,y1);
         treeGirl.Draw(x2,y2);
-        //Rectangle to test collision function
-        LCD.SetFontColor(BLUE);
-        LCD.DrawRectangle(100,200,50,1);
-        LCD.DrawRectangle(100,160,50,1);
-        LCD.DrawRectangle(160,140,50,1);
         LCD.Update();
     }
 
