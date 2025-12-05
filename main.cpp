@@ -13,6 +13,10 @@ int x1 = 100, y1 = 180;
 int x2 = 150, y2 = 180;
 FEHImage rockGuy;
 FEHImage treeGirl;
+FEHImage Level1Background;
+FEHImage CloudBase;
+FEHImage Platform, Platform2;
+FEHImage Pillar, Button, Arrow;
 
 void PlayerOneMovement(int *x1,int *y1);
     bool playerOneJump = false;
@@ -84,38 +88,41 @@ void MainMenu(){
     
 }
 
+
+
+
+
+
+
+
 void Level1Select(){
     time_t start = time(NULL);
     bool level1 = true;
-    FEHImage Level1Background;
-    FEHImage CloudBase;
-    FEHImage Platform, Platform2;
-    FEHImage Pillar, Button, Arrow;
         while(level1){
-        Level1Background.Open("level1Background_resized.png");
+        //Level1Background.Open("level1Background_resized.png");
         Level1Background.Draw(0, 0);
-        Level1Background.Close();
-        CloudBase.Open("CloudBase.png");
+        //Level1Background.Close();
+        //CloudBase.Open("CloudBase.png");
         CloudBase.Draw(0, 0);
-        CloudBase.Close();
-        Platform.Open("CloudPlat1.png");
+        //CloudBase.Close();
+        //Platform.Open("CloudPlat1.png");
         Platform.Draw(20, 60);
-        Platform.Close();
-        Platform2.Open("CloudPlat2.png");
+        //Platform.Close();
+        //Platform2.Open("CloudPlat2.png");
         Platform2.Draw(185, 50);
-        Platform2.Close(); // Add wall and arrow to show characters wrap around and encourage teamwork
-        Pillar.Open("CloudPillar.png");
+        //Platform2.Close(); // Add wall and arrow to show characters wrap around and encourage teamwork
+       // Pillar.Open("CloudPillar.png");
         Pillar.Draw(180, 82);
-        Pillar.Close();
-        Button.Open("Button.png");
+        //Pillar.Close();
+        //Button.Open("Button.png");
         Button.Draw(110, 137);
-        Button.Close();
-        Button.Open("Button.png");
+        //Button.Close();
+       // Button.Open("Button.png");
         Button.Draw(278, 137);
-        Button.Close();
-        Arrow.Open("Arrow.png");
+        //Button.Close();
+        //Arrow.Open("Arrow.png");
         Arrow.Draw(-15, 80);
-        Arrow.Close();
+        //Arrow.Close();
         
         level1 = false;
         }
@@ -137,7 +144,7 @@ void Level2Select(){
     FEHImage Pillar, Button;
    
     while (level2){
-        level2Background.Open("level1Background_resized.png");
+        level2Background.Open("level1Background.png");
         level2Background.Draw(0, 0);
         level2Background.Close();
         CloudBase.Open("CloudBase.png");
@@ -461,6 +468,8 @@ void PlayerOneMovement(int *x1,int *y1){
     else if(playerOneJump && *y1 <= p1targetHeight){
         playerOneJump = false;
         playerOneFall = true;
+        collison(x1,y1,&p1originalHeight,playerOneJump,&playerOneFall);
+
     }
     //Falling
     if(playerOneFall && *y1 < p1originalHeight){
@@ -533,6 +542,7 @@ void PlayerTwoMovement(int *x2,int *y2){
     else if(playerTwoJump && *y2 <= p2targetHeight){
         playerTwoJump = false;
         playerTwoFall = true;
+        collison(x2,y2,&p2originalHeight,playerTwoJump,&playerTwoFall);
     }
     //Falling
     if(playerTwoFall && *y2 < p2originalHeight){
@@ -570,36 +580,57 @@ void createPlayers(int *x1, int *y1, int *x2, int *y2){
 
 
 
-void collison(int *x, int *y, int *originalHeight,bool isJumping,bool *fallStatus){
-   //Level 1
-    int nearestPlatform = 180;      
-    int l1xpos[2] = {97,265};
-   int l1ypos[2] = {175-50,175-50};
-   for(int i = 0; i < 2; i++){
-    printf("X: %d       ", *x);
-    printf("Y: %d       ", *y);
+void collison(int *x, int *y, int *originalHeight, bool isJumping, bool *fallStatus) {
+    int groundHeight = 180;
+    int nearestPlatform = groundHeight;      
+    
+    int l1xpos[2] = {97, 265};
+    int l1ypos = 175 - 50; 
 
-        //If we jump and there is a platform, land on it 
-        if((*x < l1xpos[i] + 25 && *x > l1xpos[i] - 25) && ((*y > l1ypos[i] - 4) && (*y < l1ypos[i] + 4))){
-            *originalHeight = l1ypos[i];
-            nearestPlatform = l1ypos[i];
-            onPlatform = true;
-            break;
+    bool currentlyOverPlatform = false;
+    //Check to see if we are on a platform
+    for(int i = 0; i < 2; i++) {
+        bool overPlatformX = (*x < l1xpos[i] + 25) && (*x > l1xpos[i] - 25);
+        if (overPlatformX) {
+            currentlyOverPlatform = true; 
+            if ((*y > l1ypos - fallSpeed) && (*y <= l1ypos + fallSpeed)) {
+                nearestPlatform = l1ypos; 
+                *y = l1ypos; 
+                *originalHeight = l1ypos; 
+                *fallStatus = false;
+                onPlatform = true;
+                return; 
+            }
         }
-        //If we walk off the platform, fall off of it 
-        else if(((*x > l1xpos[i] + 25) || (*x < l1xpos[i] - 25)) && ((*y > l1ypos[i] - 4) && (*y < l1ypos[i] + 4))&& (!isJumping)){
-            onPlatform = false;
-           *fallStatus = true;
-        }
-   }
-   *originalHeight = nearestPlatform;
-
+    }
+    //if we are on a platform and not jumping then we are no longer on a platform and we fall
+    if (onPlatform && !currentlyOverPlatform && !isJumping) {
+        onPlatform = false;
+        *fallStatus = true;
+        *originalHeight = groundHeight; 
+    }
+    //If we are above the ground then we set location to the ground
+    if (*y >= groundHeight) {
+        *y = groundHeight; 
+        *fallStatus = false;
+        *originalHeight = groundHeight;
+        onPlatform = false;
+    }
 }
 int main(){
     MainMenu();    //starting positions 
     player p1; //rockguy
     player p2; //treegirl
+    
+    Level1Background.Open("level1Background_resized.png");
+    CloudBase.Open("CloudBase.png");
+    Platform.Open("CloudPlat1.png");
+    Platform2.Open("CloudPlat2.png");
+    Pillar.Open("CloudPillar.png");
+    Button.Open("Button.png");
+    Arrow.Open("Arrow.png");
     while(1){
+        //printf("Y: %d\n", y1);
         Level1Select();
         PlayerOneMovement(&x1,&y1);
         PlayerTwoMovement(&x2,&y2);
