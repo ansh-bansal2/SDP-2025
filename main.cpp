@@ -12,9 +12,14 @@ int p2targetHeight = 0;
 FEHImage rockGuy;
 FEHImage treeGirl;
 
+#include <time.h>
+FEHImage MainMenuBack;
+int level1Time;
+void MenuTouch();
+
 void MainMenu(){
    
-    FEHImage MainMenuBack; // Declare background image
+    FEHImage MainMenuBack, Logo; // Declare background image
     MainMenuBack.Open("MainMenuBack_resized.png"); // Open Image
     MainMenuBack.Draw(0, 0);
     // Close the image
@@ -26,6 +31,8 @@ void MainMenu(){
     LCD.FillRectangle(45, 40, 240, 5);
     LCD.SetFontColor(BLACK);
     LCD.WriteAt("Level Select (play)", 50, 15);
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("Level Select (play)", 49, 14);
     LCD.Update(); 
 
     LCD.SetFontColor(LIGHTGOLDENRODYELLOW); // Statistics button
@@ -34,6 +41,8 @@ void MainMenu(){
     LCD.FillRectangle(45, 85, 240, 5);
     LCD.SetFontColor(BLACK);
     LCD.WriteAt("Statistics", 105, 60);
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("Statistics", 104, 59);
 
     LCD.SetFontColor(LIGHTGOLDENRODYELLOW); // Instructions button
     LCD.FillRectangle(45, 95, 240, 40);
@@ -41,6 +50,8 @@ void MainMenu(){
     LCD.FillRectangle(45, 130, 240, 5);
     LCD.SetFontColor(BLACK);
     LCD.WriteAt("Instructions", 95, 105);
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("Instructions", 94, 104);
 
     LCD.SetFontColor(LIGHTGOLDENRODYELLOW); // Instructions button
     LCD.FillRectangle(45, 140, 240, 40);
@@ -48,21 +59,104 @@ void MainMenu(){
     LCD.FillRectangle(45, 175, 240, 5);
     LCD.SetFontColor(BLACK);
     LCD.WriteAt("Credits", 127, 150);
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("Credits", 126, 149);
     
-    LCD.SetFontColor(BLUE);
-    LCD.WriteAt("TITLE", 140, 195);
-    LCD.Update();
+    Logo.Open("Logo.png");
+    Logo.Draw(81, 178);
+    Logo.Close();
+
+    MenuTouch();
+    
+}
+
+void Level1Select(){
+    time_t start = time(NULL);
+    bool level1 = true;
+    FEHImage Level1Background;
+    FEHImage CloudBase;
+    FEHImage Platform, Platform2;
+    FEHImage Pillar, Button, Arrow;
+        while(level1){
+        Level1Background.Open("level1Background.png");
+        Level1Background.Draw(0, 0);
+         LCD.Update();
+        Level1Background.Close();
+        CloudBase.Open("CloudBase.png");
+        CloudBase.Draw(0, 0);
+        LCD.Update();
+        CloudBase.Close();
+        Platform.Open("CloudPlat1.png");
+        Platform.Draw(20, 40);
+        Platform.Close();
+        Platform2.Open("CloudPlat2.png");
+        Platform2.Draw(185, 30);
+        Platform2.Close(); // Add wall and arrow to show characters wrap around and encourage teamwork
+        Pillar.Open("CloudPillar.png");
+        Pillar.Draw(180, 82);
+        Pillar.Close();
+        Button.Open("Button.png");
+        Button.Draw(110, 117);
+        Button.Close();
+        Button.Open("Button.png");
+        Button.Draw(278, 117);
+        Button.Close();
+        Arrow.Open("Arrow.png");
+        Arrow.Draw(-15, 80);
+        Arrow.Close();
+        
+        level1 = false;
+        }
+time_t end = time(NULL); // Timer to compute time spend on level 1
+level1Time = end - start;
+printf("%i", level1Time);
+        
+}
+
+void Level2Select(){
+    bool level2 = true;
+    FEHImage level2Background;
+    FEHImage CloudBase;
+    FEHImage Platform, Platform2;
+    FEHImage Pillar, Button;
+   
+    while (level2){
+        level2Background.Open("level1Background.png");
+        level2Background.Draw(0, 0);
+        LCD.Update();
+        level2Background.Close();
+        CloudBase.Open("CloudBase.png");
+        CloudBase.Draw(0, 0);
+        LCD.Update();
+        CloudBase.Close();
+    }
 }
 
 void StatsButton(){
 float x, y, trash1, trash2;
 bool b=true;
     LCD.Clear(BLACK);
-    LCD.SetFontColor(WHITE);
+    MainMenuBack.Open("MainMenuBack_resized.png"); // Open Image
+    MainMenuBack.Draw(0, 0);
+    // Close the image
+    MainMenuBack.Close();
+    LCD.SetFontColor(BLACK);      
+    LCD.WriteAt("Statistics:", 1, 1);
+    LCD.SetFontColor(SLATEGRAY);
     LCD.WriteAt("Statistics:", 0, 0);
-    LCD.WriteAt("Time to Complete:", 0, 20);
-    LCD.WriteAt("100 Seconds", 0, 40);
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Time to Complete:", 1, 20);  // Add object for updating stats here
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("Time to Complete:", 0, 19);
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("100 Seconds", 1, 40);
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("100 Seconds", 0, 39);
+    LCD.WriteLine(level1Time); // Add timer result here
+    LCD.SetFontColor(DARKGRAY);
     LCD.FillRectangle(250, 5, 60, 35); // Back button
+    LCD.SetFontColor(GRAY);
+    LCD.FillRectangle(250, 35, 60, 5);
     LCD.SetFontColor(BLACK);
     LCD.WriteAt("Back", 255, 12);
     
@@ -80,7 +174,7 @@ bool b=true;
 
 void PlayButton(){ // Function to create a stats screen with back button
     float x, y, trash1, trash2;
-    bool a=true, level1Select = true;
+    bool a=true, level1Select = true, level2Select = true;
     LCD.Clear(BLACK);
     FEHImage MainMenuBack; // Declare background image
     MainMenuBack.Open("MainMenuBack_resized.png"); // Open Image
@@ -88,12 +182,25 @@ void PlayButton(){ // Function to create a stats screen with back button
     // Close the image
     MainMenuBack.Close();
 
-    LCD.SetFontColor(LIGHTGOLDENRODYELLOW);
+    LCD.SetFontColor(LIGHTGOLDENRODYELLOW); // Draws level 1 button
     LCD.FillRectangle(4, 5, 90, 35);
     LCD.SetFontColor(DARKGOLDENROD);
     LCD.FillRectangle(4, 35, 90, 5);
     LCD.SetFontColor(BLACK);
     LCD.WriteAt("Level 1", 7, 12);
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("Level 1", 6, 11);
+
+LCD.SetFontColor(LIGHTGOLDENRODYELLOW); // Draws level 2 button
+    LCD.FillRectangle(4, 45, 90, 35);
+    LCD.SetFontColor(DARKGOLDENROD);
+    LCD.FillRectangle(4, 75, 90, 5);
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Level 2", 7, 52);
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("Level 2", 6, 51);
+
+
     LCD.SetFontColor(DARKGRAY);
     LCD.FillRectangle(250, 5, 60, 35); // Back button
     LCD.SetFontColor(GRAY);
@@ -101,45 +208,90 @@ void PlayButton(){ // Function to create a stats screen with back button
     LCD.SetFontColor(BLACK);
     LCD.WriteAt("Back", 255, 12);
 
+    
     while (level1Select){  // ADD LEVEL 1 INFO HERE
         while(!LCD.Touch(&x, &y)){};
     while(LCD.Touch(&trash1, &trash2)){};
-    if (x >= 4 && y >= 5 && x <= 94 && y <= 40){
-        FEHImage Level1Background;
-        Level1Background.Open("level1Background.png");
-        Level1Background.Draw(0, 0); 
-        Level1Background.Close();
-        LCD.SetFontColor(WHITE);
-        LCD.Write("LEVEL 1 HERE");
+    if (x >= 4 && y >= 5 && x <= 94 && y <= 40){ // Check level 1 pressed
+
+        Level1Select(); // Call level select function to create level 1
+
         level1Select = false;
     }
-    }
-    
+
+    if (x >= 4 && y >= 45 && x <= 94 && y <= 80){ // Check level 2 pressed
+        
+        Level2Select();
+
+        level2Select = false;
+}
+
     while(a){
     while(!LCD.Touch(&x, &y)){};
     while(LCD.Touch(&trash1, &trash2)){};
     if (x >= 250 && y >= 5){
                 if (x <= 280 && y <= 40){
+                    
+                    a = false;
+                    level1Select = false;
                     MainMenu();
-                    a=false;
+                    
                 }
             }
         }
+    }
+    
+    
 }
 
 void InstructionsButton(){
 float y1, z, ytrash, ztrash;
 bool c = true;
     LCD.Clear(BLACK); // Draw instructions screen
-    LCD.SetFontColor(WHITE);
+    MainMenuBack.Open("MainMenuBack_resized.png"); // Open Image
+    MainMenuBack.Draw(0, 0);
+    // Close the image
+    MainMenuBack.Close();
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Instructions:", 1, 1);
+    LCD.SetFontColor(SLATEGRAY);
     LCD.WriteAt("Instructions:", 0, 0);
-    LCD.WriteAt("Use WASD to control character 1,", 0, 20); // Write instructions here
-    LCD.WriteAt(" arrow keys to control character 2.", 0, 40);
-    LCD.WriteAt("Both players must", 0, 60);
-    LCD.WriteAt("press one of the two buttons", 0, 80);
-    LCD.WriteAt("Buttons must be pressed at", 0, 100);
-    LCD.WriteAt("the same time to win.", 0 ,120);
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Use WASD to control", 1, 20); // Write instructions here
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("Use WASD to control", 0, 19);
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("character 1,", 1, 40);
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("character 1,", 0, 39);
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("arrow keys to control", 1, 60);
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("arrow keys to control", 0, 59);
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("character 2.", 1, 80);
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("character 2.", 0, 79);
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Both players must press", 1, 120);
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("Both players must press", 0, 119);
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("one of the two buttons.", 1, 140);
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("one of the two buttons.", 0, 139);
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Buttons must be pressed at", 1, 160);
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("Buttons must be pressed at", 0, 159);
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("the same time to win.", 1, 180);
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("the same time to win.", 0, 179);
+    LCD.SetFontColor(DARKGRAY);
     LCD.FillRectangle(250, 5, 60, 35); // Back button
+    LCD.SetFontColor(GRAY);
+    LCD.FillRectangle(250, 35, 60, 5);
     LCD.SetFontColor(BLACK);
     LCD.WriteAt("Back", 255, 12);
 
@@ -158,10 +310,23 @@ bool c = true;
 void CreditsButton(){
     float y1, z, ytrash, ztrash;
     bool c = true;
-    LCD.Clear(BLACK); // Draw play game screen
-    LCD.WriteAt("Credits:", 0, 0); // Write credits here
-    LCD.WriteAt("Ben Choma and Ansh Bansal", 0, 40);
-    LCD.FillRectangle(250, 5, 60, 35); 
+    LCD.Clear(BLACK); // Draw credits game screen
+    MainMenuBack.Open("MainMenuBack_resized.png"); // Open Image
+    MainMenuBack.Draw(0, 0);
+    // Close the image
+    MainMenuBack.Close();
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Credits:", 1, 1); // Write credits here
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("Credits:", 0, 0);
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Ben Choma and Ansh Bansal", 1, 40);
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("Ben Choma and Ansh Bansal", 0, 39);
+    LCD.SetFontColor(DARKGRAY);
+    LCD.FillRectangle(250, 5, 60, 35); // Back button
+    LCD.SetFontColor(GRAY);
+    LCD.FillRectangle(250, 35, 60, 5);
     LCD.SetFontColor(BLACK);
     LCD.WriteAt("Back", 255, 12);
     
