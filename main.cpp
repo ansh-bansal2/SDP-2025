@@ -4,11 +4,13 @@
 #include "FEHImages.h"
 int jumpSpeed = 3;
 int fallSpeed = 4;
-int originalHeight = 0;
-int targetHeight = 0;
+int jumpHeight = 50;
+int p1originalHeight = 0;
+int p1targetHeight = 0;
+int p2originalHeight = 0;
+int p2targetHeight = 0;
 FEHImage rockGuy;
 FEHImage treeGirl;
-//hi
 
 void MainMenu(){
    
@@ -232,73 +234,71 @@ void PlayerTwoMovement(int *x2, int *y2);
     bool playerTwoFall = false;
 void createPlayers(int p1startx, int p1starty, int p2startx, int p2starty);
 
-void collison(int *xpos, int *ypos);
+void collison(int *xpos, int *ypos, int *origHeight,bool jumpStatus,bool *fallStatus);
 
-
-
-   
-
-
+bool onPlatform = false;
 
 void PlayerOneMovement(int *x1,int *y1){
 
     //Modify to change player movement
-    
-    int jumpHeight = 50;
     int movementSpeed = 2;
 
+    //failsafe
+    if(*y1 > 180){
+    *y1 = 180;
+    playerOneFall = false;
+    playerOneJump = false;
+   }
+       //Jump
+
+    if(Keyboard.isPressed(KEY_W) && !playerOneJump && !playerOneFall){
+        playerOneJump = true;
+        p1originalHeight = *y1;
+        p1targetHeight = *y1 - jumpHeight;
+    }
 
     //left
     if(Keyboard.isPressed(KEY_A)){
-        LCD.SetFontColor(BLACK);
-       // LCD.FillRectangle(*x1, *y1, 50, 60);
-
         *x1 -= movementSpeed;
+        collison(x1,y1,&p1originalHeight,playerOneJump,&playerOneFall);
+
 
         rockGuy.Draw(*x1, *y1);
     }
     //Right
     if(Keyboard.isPressed(KEY_D)){
-        LCD.SetFontColor(BLACK);
-       // LCD.FillRectangle(*x1, *y1, 50, 60);
-
         *x1 += movementSpeed;
+        collison(x1,y1,&p1originalHeight,playerOneJump,&playerOneFall);
+
+
 
         rockGuy.Draw(*x1, *y1);
     }
-    //Jump
-    if(Keyboard.isPressed(KEY_W) && !playerOneJump && !playerOneFall){
-        playerOneJump = true;
-        targetHeight = *y1 - jumpHeight;
-        originalHeight = *y1;
-    }
-    if(playerOneJump && *y1 > targetHeight){
-         LCD.SetFontColor(BLACK);
-       // LCD.FillRectangle(*x1, *y1, 50, 60);
+    
+    if(playerOneJump && *y1 > p1targetHeight){
 
         *y1 -= jumpSpeed;
 
         rockGuy.Draw(*x1, *y1);
 
     }
-    else if(playerOneJump && *y1 <= targetHeight){
+    else if(playerOneJump && *y1 <= p1targetHeight){
         playerOneJump = false;
-        //Call collsion here to determine if playerOneFall needs to change ig otherwiae ill change to code to not use this boolean
         playerOneFall = true;
     }
     //Falling
-    if(playerOneFall && *y1 < originalHeight){
-        LCD.SetFontColor(BLACK);
-       // LCD.FillRectangle(*x1, *y1, 50, 60);
-
+    if(playerOneFall && *y1 < p1originalHeight){
+        collison(x1,y1,&p1originalHeight,playerOneJump,&playerOneFall);
         *y1 += fallSpeed;
 
         rockGuy.Draw(*x1, *y1);
 
 
     }
-    else if(playerOneFall && *y1 >= originalHeight){
+    else if(playerOneFall && *y1 >= p1originalHeight){
+        collison(x1,y1,&p1originalHeight,playerOneJump,&playerOneFall);
         playerOneFall = false;
+        *y1-=1;
     }
 
     //have the character move to the other side of the screen if they walk off one side
@@ -310,70 +310,71 @@ void PlayerOneMovement(int *x1,int *y1){
     }
         
 }
-
 void PlayerTwoMovement(int *x2,int *y2){
 
     //Modify to change player movement
-    int jumpHeight = 50;
     int movementSpeed = 2;
-   
+
+    //failsafe
+    if(*y2 > 180){
+    *y2 = 180;
+    playerTwoFall = false;
+    playerTwoJump = false;
+   }
+       //Jump
+
+    if(Keyboard.isPressed(KEY_UP) && !playerTwoJump && !playerTwoFall){
+        playerTwoJump = true;
+        p2originalHeight = *y2;
+        p2targetHeight = *y2 - jumpHeight;
+    }
 
     //left
     if(Keyboard.isPressed(KEY_LEFT)){
-         LCD.SetFontColor(BLACK);
-       // LCD.FillRectangle(*x2, *y2, 50, 60);
-
         *x2 -= movementSpeed;
+        collison(x2,y2,&p2originalHeight,playerTwoJump,&playerTwoFall);
+
 
         treeGirl.Draw(*x2, *y2);
     }
     //Right
     if(Keyboard.isPressed(KEY_RIGHT)){
-        LCD.SetFontColor(BLACK);
-       // LCD.FillRectangle(*x2, *y2, 50, 60);
-
         *x2 += movementSpeed;
+        collison(x2,y2,&p2originalHeight,playerTwoJump,&playerTwoFall);
+
+
 
         treeGirl.Draw(*x2, *y2);
     }
-    //Jump
-    if(Keyboard.isPressed(KEY_UP) && !playerTwoJump && !playerTwoFall){
-        targetHeight = *y2 - jumpHeight;
-        originalHeight = *y2;
-        playerTwoJump = true;
-    }
-    if(playerTwoJump && *y2 > targetHeight){
-       LCD.SetFontColor(BLACK);
-       // LCD.FillRectangle(*x2, *y2, 50, 60);
+    
+    if(playerTwoJump && *y2 > p2targetHeight){
 
         *y2 -= jumpSpeed;
 
         treeGirl.Draw(*x2, *y2);
 
     }
-    else if(playerTwoJump && *y2 <= targetHeight){
+    else if(playerTwoJump && *y2 <= p2targetHeight){
         playerTwoJump = false;
-        //Call collsion here to determine if playerTwoFall needs to change ig otherwiae ill change to code to not use this boolean
         playerTwoFall = true;
     }
-
-    //fall
-    if(playerTwoFall && *y2 < originalHeight){
-        LCD.SetFontColor(BLACK);
-       // LCD.FillRectangle(*x2, *y2, 50, 60);
-
+    //Falling
+    if(playerTwoFall && *y2 < p2originalHeight){
+        collison(x2,y2,&p2originalHeight,playerTwoJump,&playerTwoFall);
+        *y2 += fallSpeed;
 
         treeGirl.Draw(*x2, *y2);
 
 
     }
-    else if(playerTwoFall && *y2 >= originalHeight){
+    else if(playerTwoFall && *y2 >= p2originalHeight){
+        collison(x2,y2,&p2originalHeight,playerTwoJump,&playerTwoFall);
         playerTwoFall = false;
+        *y2-=1;
     }
-    
-    //have the character move to the other side of the screen if they walk off one side
 
-     if(*x2 > 320){
+    //have the character move to the other side of the screen if they walk off one side
+    if(*x2 > 320){
         *x2 = -25;
     }
     else if(*x2 < -25){
@@ -388,14 +389,31 @@ void createPlayers(int x1, int y1, int x2, int y2){
     treeGirl.Open("Tree_Girl_Front.png");
     rockGuy.Draw(x1,y1);
     treeGirl.Draw(x2,y2);
-  //  LCD.DrawRectangle(x1 + 19,y1 + 15,12,36);
-    //LCD.DrawRectangle(x2 + 20,y2 + 16,9,32);
-
-    //might need to close the image with .Close()
     LCD.Update();
 }
 
-void collison(int *x, int *y){
+
+
+void collison(int *x, int *y, int *originalHeight,bool isJumping,bool *fallStatus){
+   //Level 1
+    int nearestPlatform = 180;      
+    int l1xpos[3] = {100,100,160};
+   int l1ypos[3] = {200-50,160-50,140-50};
+   for(int i = 0; i < 3; i++){
+        //If we jump and there is a platform, land on it 
+        if((*x < l1xpos[i] + 25 && *x > l1xpos[i] - 25) && ((*y > l1ypos[i] - 4) && (*y < l1ypos[i] + 4))){
+            *originalHeight = l1ypos[i];
+            nearestPlatform = l1ypos[i];
+            onPlatform = true;
+            break;
+        }
+        //If we walk off the platform, fall off of it 
+        else if(((*x > l1xpos[i] + 25) || (*x < l1xpos[i] - 25)) && ((*y > l1ypos[i] - 4) && (*y < l1ypos[i] + 4))&& (!isJumping)){
+            onPlatform = false;
+           *fallStatus = true;
+        }
+   }
+   *originalHeight = nearestPlatform;
 
 }
 int main(){
@@ -413,6 +431,11 @@ int main(){
         PlayerTwoMovement(&x2,&y2);
         rockGuy.Draw(x1,y1);
         treeGirl.Draw(x2,y2);
+        //Rectangle to test collision function
+        LCD.SetFontColor(BLUE);
+        LCD.DrawRectangle(100,200,50,1);
+        LCD.DrawRectangle(100,160,50,1);
+        LCD.DrawRectangle(160,140,50,1);
         LCD.Update();
     }
 
