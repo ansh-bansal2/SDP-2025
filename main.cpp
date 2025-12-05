@@ -229,20 +229,22 @@ LCD.SetFontColor(LIGHTGOLDENRODYELLOW); // Draws level 2 button
         while(!LCD.Touch(&x, &y)){};
     while(LCD.Touch(&trash1, &trash2)){};
     if (x >= 4 && y >= 5 && x <= 94 && y <= 40){ // Check level 1 pressed
-
+        a = false;
         Level1Select(); // Call level select function to create level 1
 
         level1Select = false;
     }
 
     if (x >= 4 && y >= 45 && x <= 94 && y <= 80){ // Check level 2 pressed
-        
+        a = false;
         Level2Select();
 
         level2Select = false;
 }
 
     while(a){
+        printf("b");
+
     while(!LCD.Touch(&x, &y)){};
     while(LCD.Touch(&trash1, &trash2)){};
     if (x >= 250 && y >= 5){
@@ -378,7 +380,7 @@ while(onMenu){
         }
     }
     if((x_pos >= 45) && (y_pos >= 50)){ // Statistics button pressed
-       if (x_pos <= 310 && y_pos <= 90){\
+       if (x_pos <= 310 && y_pos <= 90){
         onMenu = false;
        StatsButton();}
     }
@@ -597,8 +599,7 @@ int main(){
     player p1; //rockguy
     player p2; //treegirl
     while(1){
-        printf("a");
-        LCD.Clear(BLACK); //will need to be changed once the new backgeround is added 
+       // LCD.Clear(BLACK); //will need to be changed once the new backgeround is added 
         PlayerOneMovement(&x1,&y1);
         PlayerTwoMovement(&x2,&y2);
         rockGuy.Draw(x1,y1);
