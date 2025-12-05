@@ -2,8 +2,8 @@
 #include "FEHUtility.h"
 #include "FEHKeyboard.h"
 #include "FEHImages.h"
-int jumpSpeed = 3;
-int fallSpeed = 4;
+int jumpSpeed = 9;
+int fallSpeed = 6;
 int jumpHeight = 50;
 int p1originalHeight = 0;
 int p1targetHeight = 0;
@@ -94,11 +94,9 @@ void Level1Select(){
         while(level1){
         Level1Background.Open("level1Background.png");
         Level1Background.Draw(0, 0);
-         LCD.Update();
         Level1Background.Close();
         CloudBase.Open("CloudBase.png");
         CloudBase.Draw(0, 0);
-        LCD.Update();
         CloudBase.Close();
         Platform.Open("CloudPlat1.png");
         Platform.Draw(20, 60);
@@ -140,11 +138,9 @@ void Level2Select(){
     while (level2){
         level2Background.Open("level1Background.png");
         level2Background.Draw(0, 0);
-        LCD.Update();
         level2Background.Close();
         CloudBase.Open("CloudBase.png");
         CloudBase.Draw(0, 0);
-        LCD.Update();
         CloudBase.Close();
     }
 }
@@ -420,7 +416,7 @@ class player{
 void PlayerOneMovement(int *x1,int *y1){
 
     //Modify to change player movement
-    int movementSpeed = 2;
+    int movementSpeed = 5;
 
     //failsafe
     if(*y1 > 180){
@@ -442,7 +438,7 @@ void PlayerOneMovement(int *x1,int *y1){
         collison(x1,y1,&p1originalHeight,playerOneJump,&playerOneFall);
 
 
-        rockGuy.Draw(*x1, *y1);
+       // rockGuy.Draw(*x1, *y1);
     }
     //Right
     if(Keyboard.isPressed(KEY_D)){
@@ -451,14 +447,14 @@ void PlayerOneMovement(int *x1,int *y1){
 
 
 
-        rockGuy.Draw(*x1, *y1);
+        //rockGuy.Draw(*x1, *y1);
     }
     
     if(playerOneJump && *y1 > p1targetHeight){
 
         *y1 -= jumpSpeed;
 
-        rockGuy.Draw(*x1, *y1);
+        //rockGuy.Draw(*x1, *y1);
 
     }
     else if(playerOneJump && *y1 <= p1targetHeight){
@@ -470,7 +466,7 @@ void PlayerOneMovement(int *x1,int *y1){
         collison(x1,y1,&p1originalHeight,playerOneJump,&playerOneFall);
         *y1 += fallSpeed;
 
-        rockGuy.Draw(*x1, *y1);
+        //rockGuy.Draw(*x1, *y1);
 
 
     }
@@ -492,7 +488,7 @@ void PlayerOneMovement(int *x1,int *y1){
 void PlayerTwoMovement(int *x2,int *y2){
 
     //Modify to change player movement
-    int movementSpeed = 2;
+    int movementSpeed = 5;
 
     //failsafe
     if(*y2 > 180){
@@ -600,11 +596,12 @@ int main(){
     player p1; //rockguy
     player p2; //treegirl
     while(1){
+        Level1Select();
        // LCD.Clear(BLACK); //will need to be changed once the new backgeround is added 
         PlayerOneMovement(&x1,&y1);
         PlayerTwoMovement(&x2,&y2);
-        rockGuy.Draw(x1,y1);
-        treeGirl.Draw(x2,y2);
+       // rockGuy.Draw(x1,y1);
+        //treeGirl.Draw(x2,y2);
         LCD.Update();
     }
 
