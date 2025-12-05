@@ -600,13 +600,12 @@ int main(){
     player p1; //rockguy
     player p2; //treegirl
     while(1){
-        Level1Select();
-        //LCD.Update();
-
+       // LCD.Clear(BLACK); //will need to be changed once the new backgeround is added 
         PlayerOneMovement(&x1,&y1);
         PlayerTwoMovement(&x2,&y2);
-        //rockGuy.Draw(x1,y1);
-        //treeGirl.Draw(x2,y2);
+        rockGuy.Draw(x1,y1);
+        treeGirl.Draw(x2,y2);
+        LCD.Update();
     }
 
 
