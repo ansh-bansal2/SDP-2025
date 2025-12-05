@@ -109,7 +109,7 @@ void Level1Select(){
         }
 time_t end = time(NULL); // Timer to compute time spend on level 1
 level1Time = end - start;
-printf("%i", level1Time);
+printf("%i", level1Time); // print to check timer is working
         
 }
 
