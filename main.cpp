@@ -92,7 +92,7 @@ void Level1Select(){
     FEHImage Platform, Platform2;
     FEHImage Pillar, Button, Arrow;
         while(level1){
-        Level1Background.Open("level1Background.png");
+        Level1Background.Open("level1Background_resized.png");
         Level1Background.Draw(0, 0);
         Level1Background.Close();
         CloudBase.Open("CloudBase.png");
@@ -124,7 +124,7 @@ void Level1Select(){
 
 time_t end = time(NULL); // Timer to compute time spend on level 1
 level1Time = end - start;
-printf("%i", level1Time); // print to check timer is working
+//printf("%i", level1Time); // print to check timer is working
         
 }
 
@@ -136,7 +136,7 @@ void Level2Select(){
     FEHImage Pillar, Button;
    
     while (level2){
-        level2Background.Open("level1Background.png");
+        level2Background.Open("level1Background_resized.png");
         level2Background.Draw(0, 0);
         level2Background.Close();
         CloudBase.Open("CloudBase.png");
