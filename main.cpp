@@ -101,19 +101,19 @@ void Level1Select(){
         LCD.Update();
         CloudBase.Close();
         Platform.Open("CloudPlat1.png");
-        Platform.Draw(20, 40);
+        Platform.Draw(20, 60);
         Platform.Close();
         Platform2.Open("CloudPlat2.png");
-        Platform2.Draw(185, 30);
+        Platform2.Draw(185, 50);
         Platform2.Close(); // Add wall and arrow to show characters wrap around and encourage teamwork
         Pillar.Open("CloudPillar.png");
         Pillar.Draw(180, 82);
         Pillar.Close();
         Button.Open("Button.png");
-        Button.Draw(110, 117);
+        Button.Draw(110, 137);
         Button.Close();
         Button.Open("Button.png");
-        Button.Draw(278, 117);
+        Button.Draw(278, 137);
         Button.Close();
         Arrow.Open("Arrow.png");
         Arrow.Draw(-15, 80);
