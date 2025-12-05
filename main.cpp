@@ -364,7 +364,8 @@ void MenuTouch(){
 float x_pos, y_pos;
 float x_trash, y_trash;
 bool FrontMenu, IntMenu;
-while(true){
+bool onMenu = true;
+while(onMenu){
     //LCD.ClearBuffer();
     LCD.SetFontColor(WHITE);
     while(!LCD.Touch(&x_pos,&y_pos)) {}; // Register touch
@@ -372,24 +373,29 @@ while(true){
 
     if((x_pos >= 45) && (y_pos >= 5)){ // Play game button pressed
         if (x_pos <= 310 && y_pos <= 45){
+            onMenu = false;
            PlayButton();
 
         }
     }
     if((x_pos >= 45) && (y_pos >= 50)){ // Statistics button pressed
-       if (x_pos <= 310 && y_pos <= 90){
+       if (x_pos <= 310 && y_pos <= 90){\
+        onMenu = false;
        StatsButton();}
     }
 
 
     if((x_pos >= 45) && (y_pos >= 95)){ // Instructions button pressed
         if (x_pos <= 310 && y_pos <= 135){
+                onMenu = false;
                 InstructionsButton();
         }
     }
 
     if((x_pos >= 45) && (y_pos >= 140)){ // Credits button pressed
         if (x_pos <= 310 && y_pos <= 180){
+
+        onMenu = false;
        CreditsButton();
     }
 }
@@ -591,7 +597,6 @@ int main(){
     MainMenu();    //starting positions 
     player p1; //rockguy
     player p2; //treegirl
-    //Creates players
     while(1){
         printf("a");
         LCD.Clear(BLACK); //will need to be changed once the new backgeround is added 
