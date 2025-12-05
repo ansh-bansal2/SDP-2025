@@ -120,6 +120,7 @@ void Level1Select(){
         level1 = false;
         }
         createPlayers(&x1,&y1,&x2,&y2);
+
         
 
 time_t end = time(NULL); // Timer to compute time spend on level 1
@@ -572,9 +573,12 @@ void createPlayers(int *x1, int *y1, int *x2, int *y2){
 void collison(int *x, int *y, int *originalHeight,bool isJumping,bool *fallStatus){
    //Level 1
     int nearestPlatform = 180;      
-    int l1xpos[3] = {100,100,160};
-   int l1ypos[3] = {200-50,160-50,140-50};
-   for(int i = 0; i < 3; i++){
+    int l1xpos[2] = {97,265};
+   int l1ypos[2] = {175-50,175-50};
+   for(int i = 0; i < 2; i++){
+    printf("X: %d       ", *x);
+    printf("Y: %d       ", *y);
+
         //If we jump and there is a platform, land on it 
         if((*x < l1xpos[i] + 25 && *x > l1xpos[i] - 25) && ((*y > l1ypos[i] - 4) && (*y < l1ypos[i] + 4))){
             *originalHeight = l1ypos[i];
@@ -597,11 +601,9 @@ int main(){
     player p2; //treegirl
     while(1){
         Level1Select();
-       // LCD.Clear(BLACK); //will need to be changed once the new backgeround is added 
         PlayerOneMovement(&x1,&y1);
         PlayerTwoMovement(&x2,&y2);
-       // rockGuy.Draw(x1,y1);
-        //treeGirl.Draw(x2,y2);
+        
         LCD.Update();
     }
 
