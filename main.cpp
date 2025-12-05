@@ -122,7 +122,6 @@ void Level1Select(){
         level1 = false;
         }
         createPlayers(&x1,&y1,&x2,&y2);
-        
 
 time_t end = time(NULL); // Timer to compute time spend on level 1
 level1Time = end - start;
