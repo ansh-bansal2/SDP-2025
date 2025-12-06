@@ -9,6 +9,9 @@ int p1originalHeight = 0;
 int p1targetHeight = 0;
 int p2originalHeight = 0;
 int p2targetHeight = 0;
+int currentLevel = 0;
+bool playerOneDeath = false;
+bool playerTwoDeath = false;
 int x1 = 100, y1 = 180;
 int x2 = 150, y2 = 180;
 FEHImage rockGuy;
@@ -20,6 +23,38 @@ FEHImage Pillar, Button, Arrow;
 FEHImage level2Background;
 FEHImage Platformlvl2;
 FEHImage Lvl1Complete;
+FEHImage Spike;
+
+class player { //Class which tracks player stats
+private:
+    int jumps;
+    int deaths;
+    int wins;
+
+public:
+    player() {
+        jumps = 0;
+        deaths = 0;
+        wins = 0;
+    }
+
+    void AddJump(){ 
+        jumps++; }
+    void AddDeath(){ 
+        deaths++; }
+    void AddWin(){ 
+        wins++; }
+
+    int GetJumps(){ 
+        return jumps; }
+    int GetDeaths(){ 
+        return deaths; }
+    int GetWins(){ 
+        return wins; }
+};
+
+player p1; //rock
+player p2; //root
 
 
 void Lvl1buttons();
@@ -34,6 +69,9 @@ void createPlayers(int *p1startx, int *p1starty, int *p2startx, int *p2starty);
 void collison(int *xpos, int *ypos, int *origHeight,bool jumpStatus,bool *fallStatus);
 
 bool onPlatform = false;
+
+void wallCollision(int *x, int *y);
+
 
 #include <time.h>
 FEHImage MainMenuBack;
@@ -128,6 +166,7 @@ void Level1Select(){
         //Arrow.Open("Arrow.png");
         Arrow.Draw(-15, 80);
         //Arrow.Close();
+        Spike.Draw(30,205);
         
         level1 = false;
         }
@@ -150,22 +189,10 @@ void Level2Select(){
     FEHImage Pillar, Button;*/
    
     while (level2){
-        Level1Background.Draw(0, 0);
-        
-        Platform.Draw(-50, 85); //Spawn rock guy on this platform
-        
-        Platform2.Draw(162, 105); // Spawn tree girl on this platform
-        Platform.Draw(162, 45);
-        Platform2.Draw(-52, -20);
-        Platform2.Draw(162, -55);
-        Platform.Draw(-50, -75);
-        
-        Button.Draw(41, 0);
-        
-        Button.Draw(255, 28);
-        
-        
-        
+        level2Background.Open("level1Background_resized.png");
+        level2Background.Draw(0, 0);
+        level2Background.Close();
+        Platformlvl2.Draw(200, 160);
         
 
         level2 = false;
@@ -184,15 +211,84 @@ bool b=true;
     LCD.WriteAt("Statistics:", 1, 1);
     LCD.SetFontColor(SLATEGRAY);
     LCD.WriteAt("Statistics:", 0, 0);
-    LCD.SetFontColor(BLACK);
+
+   /* LCD.SetFontColor(BLACK);
     LCD.WriteAt("Time to Complete:", 1, 20);  // Add object for updating stats here
     LCD.SetFontColor(SLATEGRAY);
-    LCD.WriteAt("Time to Complete:", 0, 19);
-    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Time to Complete:", 0, 19); */
+
+    /*LCD.SetFontColor(BLACK);
     LCD.WriteAt("100 Seconds", 1, 40);
     LCD.SetFontColor(SLATEGRAY);
-    LCD.WriteAt("100 Seconds", 0, 39);
-    LCD.WriteLine(level1Time); // Add timer result here
+    LCD.WriteAt("100 Seconds", 0, 39); */
+    //LCD.WriteLine(level1Time); // Add timer result here
+
+    //Player One Stats
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Player 1:", 1, 20);  // Add object for updating stats here
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("Player 1:", 0, 19);
+
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Deaths: ", 1, 39);
+    int deaths = p1.GetDeaths();
+    LCD.WriteAt(deaths, 91,39);
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("Deaths: ", 0, 38);
+    LCD.WriteAt(deaths, 90,38);
+
+
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Jumps: ", 1, 58);
+    int jumps = p1.GetJumps();
+    LCD.WriteAt(jumps, 81,58);
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("Jumps: ", 0, 57);
+    LCD.WriteAt(jumps, 80,57);
+
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Wins: ", 1, 77);
+    int wins = p1.GetWins();
+    LCD.WriteAt(wins, 66,77);
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("Wins: ", 0, 76);
+    LCD.WriteAt(wins, 65,76);
+
+    //Player Two Stats
+
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Player 2:", 1, 96 + 19);  // Add object for updating stats here
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("Player 2:", 0, 95 + 19);
+
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Deaths: ", 1, 115 + 19);
+    int deaths2 = p2.GetDeaths();
+    LCD.WriteAt(deaths2, 91,115 + 19);
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("Deaths: ", 0, 114 + 19);
+    LCD.WriteAt(deaths2, 90,114 + 19);
+
+
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Jumps: ", 1, 134 + 19);
+    int jumps2 = p2.GetJumps();
+    LCD.WriteAt(jumps2, 81,134 + 19);
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("Jumps: ", 0, 133 + 19);
+    LCD.WriteAt(jumps2, 80,133 + 19);
+
+    LCD.SetFontColor(BLACK);
+    LCD.WriteAt("Wins: ", 1, 153 + 19);
+    int wins2 = p2.GetWins();
+    LCD.WriteAt(wins2, 66,153 + 19);
+    LCD.SetFontColor(SLATEGRAY);
+    LCD.WriteAt("Wins: ", 0, 152 + 19);
+    LCD.WriteAt(wins2, 65,152 + 19);
+
+
+
+
     LCD.SetFontColor(DARKGRAY);
     LCD.FillRectangle(250, 5, 60, 35); // Back button
     LCD.SetFontColor(GRAY);
@@ -254,6 +350,7 @@ LCD.SetFontColor(LIGHTGOLDENRODYELLOW); // Draws level 2 button
     while(LCD.Touch(&trash1, &trash2)){};
     if (x >= 4 && y >= 5 && x <= 94 && y <= 40){ // Check level 1 pressed
         a = false;
+        currentLevel = 1;
         Level1Select(); // Call level select function to create level 1
 
         level1Select = false;
@@ -261,6 +358,7 @@ LCD.SetFontColor(LIGHTGOLDENRODYELLOW); // Draws level 2 button
 
     if (x >= 4 && y >= 45 && x <= 94 && y <= 80){ // Check level 2 pressed
         a = false;
+        currentLevel = 2;
         Level2Select();
 
         level2Select = false;
@@ -429,16 +527,6 @@ while(onMenu){
 
 }
 
-class player{
-    private:
-    int deaths;
-    int jumps;
-
-    public:
-    int getDeaths();
-    int getJumps();
-};
-
 
 void PlayerOneMovement(int *x1,int *y1){
 
@@ -454,6 +542,7 @@ void PlayerOneMovement(int *x1,int *y1){
        //Jump
 
     if(Keyboard.isPressed(KEY_W) && !playerOneJump && !playerOneFall){
+        p1.AddJump();
         playerOneJump = true;
         p1originalHeight = *y1;
         p1targetHeight = *y1 - jumpHeight;
@@ -528,6 +617,7 @@ void PlayerTwoMovement(int *x2,int *y2){
        //Jump
 
     if(Keyboard.isPressed(KEY_UP) && !playerTwoJump && !playerTwoFall){
+        p2.AddJump();
         playerTwoJump = true;
         p2originalHeight = *y2;
         p2targetHeight = *y2 - jumpHeight;
@@ -614,6 +704,8 @@ void collison(int *x, int *y, int *originalHeight, bool isJumping, bool *fallSta
 
     bool currentlyOverPlatform = false;
     //Check to see if we are on a platform
+    printf("X: %d      ", *x);
+    printf("Y: %d\n",*y);
     for(int i = 0; i < 2; i++) {
         bool overPlatformX = (*x < l1xpos[i] + 25) && (*x > l1xpos[i] - 25);
         if (overPlatformX) {
@@ -659,11 +751,47 @@ int BTN1_X = 116; //Button positions for hitboxes
 int BTN1_Y = 163;
 int BTN2_X = 284;
 int BTN2_Y = 163;
+// Returns true if movement is blocked by a wall
+void wallCollision(int *x, int *y) {
+    int wallXLeft = 165;
+    int wallXRight = 215;
+    int wallY = 50;
+    int wallHeight = 100;
+    if(*x < wallXLeft + 10 && *x >= 0){
+        if(*x >= wallXLeft){
+        *x = wallXLeft;
+        }
+    }
+    else if(*x >= wallXLeft + 20 && *x <= 320){
+        if(*x <= wallXRight){
+        *x = wallXRight;
+        }
+    }
+    
+
+    //Check if player hits the spike
+    if(*x >= 0 && *x <= 32 && *y >= 168){
+        if(x1 >= 0 && x1 <= 32 && y1 >= 168 ){
+            p1.AddDeath();
+            playerOneDeath = true;
+        }
+        else{
+            p2.AddDeath();
+            playerTwoDeath = true;
+        }
+        x2 = 150;
+        y2 = 180;
+        x1 = 130;
+        y1 = 180;
+
+    }
+
+}
+
 
 int main(){
-        //starting positions 
-    player p1; //rockguy
-    player p2; //treegirl
+    MainMenu();    //starting positions 
+    int deathMessageTimer = 1000;
     
     Level1Background.Open("level1Background_resized.png"); // Level 1 files
     CloudBase.Open("CloudBase.png");
@@ -672,33 +800,57 @@ int main(){
     Pillar.Open("CloudPillar.png");
     Button.Open("Button.png");
     Arrow.Open("Arrow.png"); 
+    Spike.Open("Crystal_Shard.png");
     // Level 2 Files, breaks if ran currently
     //Platformlvl2.Open("CloudPlat1.png");
     //Lvl1Complete.Open("Level 1 Complete_resized.png")
-    MainMenu();
 
-    while(1){
+
+    while(currentLevel = 1){
         //printf("Y: %d\n", y1);
         Level1Select();
+        wallCollision(&x1,&y1);
+        wallCollision(&x2, &y2);
+
         PlayerOneMovement(&x1,&y1);
         PlayerTwoMovement(&x2,&y2);
 
         bool p1OnBtn = isOnButton(x1, y1, BTN1_X, BTN1_Y); // Check position
         bool p2OnBtn = isOnButton(x2, y2, BTN2_X, BTN2_Y);
 
-if(p1OnBtn && p2OnBtn) { // If 2 buttons pressed, level won
-    LCD.Clear(BLACK);
-    LCD.SetFontColor(WHITE);
-    LCD.WriteAt("YOU WIN!", 100, 120);
-    printf("You Win");
-    Lvl1Complete.Open("Level 1 Complete_resized.png");
-    Lvl1Complete.Draw(0,0);
-    Lvl1Complete.Close();
-    LCD.Update();
+        if(p1OnBtn && p2OnBtn) { // If 2 buttons pressed, level won
+            LCD.Clear(BLACK);
+            LCD.SetFontColor(WHITE);
+            LCD.WriteAt("YOU WIN!", 100, 120);
+            printf("You Win");
+            p1.AddWin();
+            p2.AddWin();
+            Lvl1Complete.Open("Level 1 Complete_resized.png");
+            Lvl1Complete.Draw(0,0);
+            Lvl1Complete.Close();
+            LCD.Update();
 
-    Sleep(3.0); // Pause so players see screen
-    MainMenu(); // Go back to menu or load next level ADD LATER
-    }
+            Sleep(3.0); // Pause so players see screen
+            MainMenu(); // Go back to menu or load next level ADD LATER
+        }
+        if(playerOneDeath){
+            LCD.WriteAt("Player One Died!",70,0);
+            deathMessageTimer -= 20;
+            if(deathMessageTimer <= 0){
+                playerOneDeath = false;
+                deathMessageTimer = 2000;
+            }
+
+        }
+        else if(playerTwoDeath){
+            LCD.WriteAt("Player Two Died!",70,0);
+            deathMessageTimer -= 20;
+            if(deathMessageTimer <= 0){
+                playerTwoDeath = false;
+                deathMessageTimer = 2000;
+            }
+
+        }
         
     LCD.Update();
     }
