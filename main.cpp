@@ -189,11 +189,20 @@ void Level2Select(){
     FEHImage Pillar, Button;*/
    
     while (level2){
-        level2Background.Open("level1Background_resized.png");
-        level2Background.Draw(0, 0);
-        level2Background.Close();
-        Platformlvl2.Draw(200, 160);
-        
+         Level1Background.Draw(0, 0);
+       
+        Platform.Draw(-50, 85); //Spawn rock guy on this platform
+       
+        Platform2.Draw(162, 105); // Spawn tree girl on this platform
+        Platform.Draw(162, 45);
+        Platform2.Draw(-52, -20);
+        Platform2.Draw(162, -55);
+        Platform.Draw(-50, -75);
+       
+        Button.Draw(41, 0);
+       
+        Button.Draw(255, 28);
+
 
         level2 = false;
     }
