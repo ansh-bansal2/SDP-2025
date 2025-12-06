@@ -17,7 +17,12 @@ FEHImage Level1Background;
 FEHImage CloudBase;
 FEHImage Platform, Platform2;
 FEHImage Pillar, Button, Arrow;
+FEHImage level2Background;
+FEHImage Platformlvl2;
+FEHImage Lvl1Complete;
 
+
+void Lvl1buttons();
 void PlayerOneMovement(int *x1,int *y1);
     bool playerOneJump = false;
     bool playerOneFall = false;
@@ -127,6 +132,10 @@ void Level1Select(){
         level1 = false;
         }
         createPlayers(&x1,&y1,&x2,&y2);
+        // Add button press check here
+        
+        /*IF BUTTONS ARE PRESSED AT SAME TIME*/
+        // Lvl1Complete.Draw(0, 0)
 
         
 
@@ -138,18 +147,19 @@ level1Time = end - start;
 
 void Level2Select(){
     bool level2 = true;
-    FEHImage level2Background;
+    /*FEHImage level2Background;
     FEHImage CloudBase;
     FEHImage Platform, Platform2;
-    FEHImage Pillar, Button;
+    FEHImage Pillar, Button;*/
    
     while (level2){
-        level2Background.Open("level1Background.png");
+        level2Background.Open("level1Background_resized.png");
         level2Background.Draw(0, 0);
         level2Background.Close();
-        CloudBase.Open("CloudBase.png");
-        CloudBase.Draw(0, 0);
-        CloudBase.Close();
+        Platformlvl2.Draw(200, 160);
+        
+
+        level2 = false;
     }
 }
 
@@ -567,7 +577,12 @@ void PlayerTwoMovement(int *x2,int *y2){
         *x2 = 320;
     }
 }
-    
+
+void Lvl1buttons(){
+    LCD.FillRectangle(116 ,163, 12, 12); // Button 1 position
+    LCD.FillRectangle(284, 163, 12, 12); // Button 2 position
+}
+
 void createPlayers(int *x1, int *y1, int *x2, int *y2){
     //Creates players at location, should be called in the level select function.
     //50 x 60 pixels
@@ -575,6 +590,10 @@ void createPlayers(int *x1, int *y1, int *x2, int *y2){
     treeGirl.Open("Tree_Girl_Front.png");
     rockGuy.Draw(*x1,*y1);
     treeGirl.Draw(*x2,*y2);
+
+// Add button hitboxes
+    Lvl1buttons();
+    
     LCD.Update();
 }
 
@@ -622,13 +641,18 @@ int main(){
     player p1; //rockguy
     player p2; //treegirl
     
-    Level1Background.Open("level1Background_resized.png");
+    Level1Background.Open("level1Background_resized.png"); // Level 1 files
     CloudBase.Open("CloudBase.png");
     Platform.Open("CloudPlat1.png");
     Platform2.Open("CloudPlat2.png");
     Pillar.Open("CloudPillar.png");
     Button.Open("Button.png");
-    Arrow.Open("Arrow.png");
+    Arrow.Open("Arrow.png"); 
+    // Level 2 Files, breaks if ran currently
+    //Platformlvl2.Open("CloudPlat1.png");
+    //Lvl1Complete.Open("Level 1 Complete_resized.png")
+
+
     while(1){
         //printf("Y: %d\n", y1);
         Level1Select();
