@@ -831,11 +831,15 @@ int main(){
             LCD.Clear(BLACK);
             LCD.SetFontColor(WHITE);
             LCD.WriteAt("YOU WIN!", 100, 120);
-            printf("You Win");
+            //printf("You Win");
             p1.AddWin();
             p2.AddWin();
             Lvl1Complete.Open("Level 1 Complete_resized.png");
             Lvl1Complete.Draw(0,0);
+            x1 = 130;
+            y1 = 180;
+            x2 = 150;
+            y1 = 180;
             Lvl1Complete.Close();
             LCD.Update();
 
