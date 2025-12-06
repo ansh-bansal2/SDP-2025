@@ -799,7 +799,7 @@ void wallCollision(int *x, int *y) {
 
 
 int main(){
-    MainMenu();    //starting positions 
+    //MainMenu();    //starting positions 
     int deathMessageTimer = 1000;
     
     Level1Background.Open("level1Background_resized.png"); // Level 1 files
@@ -813,7 +813,7 @@ int main(){
     // Level 2 Files, breaks if ran currently
     //Platformlvl2.Open("CloudPlat1.png");
     //Lvl1Complete.Open("Level 1 Complete_resized.png")
-
+    MainMenu();
 
     while(currentLevel = 1){
         //printf("Y: %d\n", y1);
