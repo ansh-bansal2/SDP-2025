@@ -575,10 +575,7 @@ void PlayerTwoMovement(int *x2,int *y2){
     }
 }
 
-void Lvl1buttons(){
-    LCD.FillRectangle(116 ,163, 12, 12); // Button 1 position
-    LCD.FillRectangle(284, 163, 12, 12); // Button 2 position
-}
+
 
 void createPlayers(int *x1, int *y1, int *x2, int *y2){
     //Creates players at location, should be called in the level select function.
@@ -588,8 +585,8 @@ void createPlayers(int *x1, int *y1, int *x2, int *y2){
     rockGuy.Draw(*x1,*y1);
     treeGirl.Draw(*x2,*y2);
 
-// Add button hitboxes
-    Lvl1buttons();
+
+    
     
     LCD.Update();
 }
@@ -646,7 +643,7 @@ bool isOnButton(int px, int py, int btnX, int btnY) {
     return xOverlap && yOverlap;
 }
 
-int BTN1_X = 116;
+int BTN1_X = 116; //Button positions for hitboxes
 int BTN1_Y = 163;
 int BTN2_X = 284;
 int BTN2_Y = 163;
@@ -687,8 +684,8 @@ if(p1OnBtn && p2OnBtn) { // If 2 buttons pressed, level won
     Lvl1Complete.Close();
     LCD.Update();
 
-    Sleep(3.0); // Pause so players see the screen
-    MainMenu(); // Go back to menu or load next level
+    Sleep(3.0); // Pause so players see screen
+    MainMenu(); // Go back to menu or load next level ADD LATER
     }
         
     LCD.Update();
