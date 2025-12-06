@@ -24,6 +24,11 @@ FEHImage level2Background;
 FEHImage Platformlvl2;
 FEHImage Lvl1Complete;
 FEHImage Spike;
+int buttonX1 = 114;   // example position
+int buttonY1 = 163;
+int buttonX2 = 282;   // second button
+int buttonY2 = 163;
+
 
 class player { //Class which tracks player stats
 private:
@@ -139,6 +144,7 @@ void MainMenu(){
 
 
 void Level1Select(){
+    
     time_t start = time(NULL);
     bool level1 = true;
         while(level1){
@@ -745,15 +751,28 @@ void collison(int *x, int *y, int *originalHeight, bool isJumping, bool *fallSta
 }
 
 const int BTN_SIZE = 30;
-bool isOnButton(int px, int py, int btnX, int btnY) {
+bool isOnButton(int px, int py, int btn1X, int btn1Y, int btn2X, int btn2Y) {
     // Player sprite is 50×60, and (px,py) is top-left.
     int playerFeetY = py + 60;   // feet position
     int playerCenterX = px + 25; // horizontally centered
     
-    bool xOverlap = (playerCenterX >= btnX) && (playerCenterX <= btnX + BTN_SIZE);
+   /* bool xOverlap = (playerCenterX >= btnX) && (playerCenterX <= btnX + BTN_SIZE);
     bool yOverlap = (playerFeetY >= btnY) && (playerFeetY <= btnY + BTN_SIZE);
 
-    return xOverlap && yOverlap;
+    return xOverlap && yOverlap;*/
+    // Check button 1
+    bool onBtn1 =
+        (playerCenterX >= btn1X && playerCenterX <= btn1X + BTN_SIZE) &&
+        (playerFeetY  >= btn1Y && playerFeetY  <= btn1Y + BTN_SIZE);
+
+    // Check button 2
+    bool onBtn2 =
+        (playerCenterX >= btn2X && playerCenterX <= btn2X + BTN_SIZE) &&
+        (playerFeetY  >= btn2Y && playerFeetY  <= btn2Y + BTN_SIZE);
+
+    // Either button counts as "on a button"
+    return onBtn1 || onBtn2;
+
 }
 
 int BTN1_X = 116; //Button positions for hitboxes
@@ -824,10 +843,20 @@ int main(){
         PlayerOneMovement(&x1,&y1);
         PlayerTwoMovement(&x2,&y2);
 
-        bool p1OnBtn = isOnButton(x1, y1, BTN1_X, BTN1_Y); // Check position
-        bool p2OnBtn = isOnButton(x2, y2, BTN2_X, BTN2_Y);
+        //bool p1OnBtn = isOnButton(x1, y1, BTN1_X, BTN1_Y); // Check position
+        //bool p2OnBtn = isOnButton(x2, y2, BTN2_X, BTN2_Y);
+        bool p1OnButton = isOnButton(x1, y1, buttonX1, buttonY1, buttonX2, buttonY2);
+        bool p2OnButton = isOnButton(x2, y2, buttonX1, buttonY1, buttonX2, buttonY2);
 
-        if(p1OnBtn && p2OnBtn) { // If 2 buttons pressed, level won
+// BOTH buttons must be pressed at the same time:
+        bool leftPressed  = isOnButton(x1, y1, buttonX1, buttonY1, buttonX1, buttonY1) ||
+                    isOnButton(x2, y2, buttonX1, buttonY1, buttonX1, buttonY1);
+
+        bool rightPressed = isOnButton(x1, y1, buttonX2, buttonY2, buttonX2, buttonY2) ||
+                    isOnButton(x2, y2, buttonX2, buttonY2, buttonX2, buttonY2);
+
+
+        if(leftPressed && rightPressed) { // If 2 buttons pressed, level won
             LCD.Clear(BLACK);
             LCD.SetFontColor(WHITE);
             LCD.WriteAt("YOU WIN!", 100, 120);
