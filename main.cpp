@@ -13,6 +13,15 @@ int x1 = 100, y1 = 180;
 int x2 = 150, y2 = 180;
 FEHImage rockGuy;
 FEHImage treeGirl;
+FEHImage Level1Background;
+FEHImage CloudBase;
+FEHImage Platform, Platform2;
+FEHImage Pillar, Button, Arrow;
+FEHImage level2Background;
+FEHImage CloudBase;
+FEHImage Platform, Platform2;
+FEHImage Pillar, Button;
+
 
 void PlayerOneMovement(int *x1,int *y1);
     bool playerOneJump = false;
@@ -27,13 +36,13 @@ void collison(int *xpos, int *ypos, int *origHeight,bool jumpStatus,bool *fallSt
 bool onPlatform = false;
 
 #include <time.h>
-FEHImage MainMenuBack;
+FEHImage MainMenuBack, Logo;
 int level1Time;
 void MenuTouch();
 
 void MainMenu(){
    
-    FEHImage MainMenuBack, Logo; // Declare background image
+    //FEHImage MainMenuBack, Logo; // Declare background image
     MainMenuBack.Open("MainMenuBack_resized.png"); // Open Image
     MainMenuBack.Draw(0, 0);
     // Close the image
@@ -87,35 +96,32 @@ void MainMenu(){
 void Level1Select(){
     time_t start = time(NULL);
     bool level1 = true;
-    FEHImage Level1Background;
-    FEHImage CloudBase;
-    FEHImage Platform, Platform2;
-    FEHImage Pillar, Button, Arrow;
+    
         while(level1){
         Level1Background.Open("level1Background_resized.png");
         Level1Background.Draw(0, 0);
-        Level1Background.Close();
+        //Level1Background.Close();
         CloudBase.Open("CloudBase.png");
         CloudBase.Draw(0, 0);
-        CloudBase.Close();
+        //CloudBase.Close();
         Platform.Open("CloudPlat1.png");
         Platform.Draw(20, 60);
-        Platform.Close();
+        //Platform.Close();
         Platform2.Open("CloudPlat2.png");
         Platform2.Draw(185, 50);
-        Platform2.Close(); // Add wall and arrow to show characters wrap around and encourage teamwork
+        //Platform2.Close(); // Add wall and arrow to show characters wrap around and encourage teamwork
         Pillar.Open("CloudPillar.png");
         Pillar.Draw(180, 82);
-        Pillar.Close();
+        //Pillar.Close();
         Button.Open("Button.png");
         Button.Draw(110, 137);
-        Button.Close();
+        //Button.Close();
         Button.Open("Button.png");
         Button.Draw(278, 137);
-        Button.Close();
+        //Button.Close();
         Arrow.Open("Arrow.png");
         Arrow.Draw(-15, 80);
-        Arrow.Close();
+        //Arrow.Close();
         
         level1 = false;
         }
@@ -131,10 +137,7 @@ level1Time = end - start;
 
 void Level2Select(){
     bool level2 = true;
-    FEHImage level2Background;
-    FEHImage CloudBase;
-    FEHImage Platform, Platform2;
-    FEHImage Pillar, Button;
+    
    
     while (level2){
         level2Background.Open("level1Background_resized.png");
@@ -190,7 +193,7 @@ void PlayButton(){ // Function to create a stats screen with back button
     float x, y, trash1, trash2;
     bool a=true, level1Select = true, level2Select = true;
     LCD.Clear(BLACK);
-    FEHImage MainMenuBack; // Declare background image
+    
     MainMenuBack.Open("MainMenuBack_resized.png"); // Open Image
     MainMenuBack.Draw(0, 0);
     // Close the image
@@ -576,8 +579,8 @@ void collison(int *x, int *y, int *originalHeight,bool isJumping,bool *fallStatu
     int l1xpos[2] = {97,265};
    int l1ypos[2] = {175-50,175-50};
    for(int i = 0; i < 2; i++){
-    printf("X: %d       ", *x);
-    printf("Y: %d       ", *y);
+    //printf("X: %d       ", *x);
+    //printf("Y: %d       ", *y);
 
         //If we jump and there is a platform, land on it 
         if((*x < l1xpos[i] + 25 && *x > l1xpos[i] - 25) && ((*y > l1ypos[i] - 4) && (*y < l1ypos[i] + 4))){
