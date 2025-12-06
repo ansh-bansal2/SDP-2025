@@ -132,10 +132,7 @@ void Level1Select(){
         level1 = false;
         }
         createPlayers(&x1,&y1,&x2,&y2);
-        // Add button press check here
         
-        /*IF BUTTONS ARE PRESSED AT SAME TIME*/
-        // Lvl1Complete.Draw(0, 0)
 
         
 
@@ -637,7 +634,7 @@ void collison(int *x, int *y, int *originalHeight, bool isJumping, bool *fallSta
     }
 }
 
-const int BTN_SIZE = 12;
+const int BTN_SIZE = 30;
 bool isOnButton(int px, int py, int btnX, int btnY) {
     // Player sprite is 50×60, and (px,py) is top-left.
     int playerFeetY = py + 60;   // feet position
@@ -685,9 +682,12 @@ if(p1OnBtn && p2OnBtn) { // If 2 buttons pressed, level won
     LCD.SetFontColor(WHITE);
     LCD.WriteAt("YOU WIN!", 100, 120);
     printf("You Win");
+    Lvl1Complete.Open("Level 1 Complete_resized.png");
+    Lvl1Complete.Draw(0,0);
+    Lvl1Complete.Close();
     LCD.Update();
 
-    Sleep(2.0); // Pause so players see the screen
+    Sleep(3.0); // Pause so players see the screen
     MainMenu(); // Go back to menu or load next level
     }
         
