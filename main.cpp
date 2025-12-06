@@ -636,6 +636,24 @@ void collison(int *x, int *y, int *originalHeight, bool isJumping, bool *fallSta
         onPlatform = false;
     }
 }
+
+const int BTN_SIZE = 12;
+bool isOnButton(int px, int py, int btnX, int btnY) {
+    // Player sprite is 50×60, and (px,py) is top-left.
+    int playerFeetY = py + 60;   // feet position
+    int playerCenterX = px + 25; // horizontally centered
+    
+    bool xOverlap = (playerCenterX >= btnX) && (playerCenterX <= btnX + BTN_SIZE);
+    bool yOverlap = (playerFeetY >= btnY) && (playerFeetY <= btnY + BTN_SIZE);
+
+    return xOverlap && yOverlap;
+}
+
+int BTN1_X = 116;
+int BTN1_Y = 163;
+int BTN2_X = 284;
+int BTN2_Y = 163;
+
 int main(){
     MainMenu();    //starting positions 
     player p1; //rockguy
@@ -658,8 +676,22 @@ int main(){
         Level1Select();
         PlayerOneMovement(&x1,&y1);
         PlayerTwoMovement(&x2,&y2);
+
+        bool p1OnBtn = isOnButton(x1, y1, BTN1_X, BTN1_Y); // Check position
+        bool p2OnBtn = isOnButton(x2, y2, BTN2_X, BTN2_Y);
+
+if(p1OnBtn && p2OnBtn) { // If 2 buttons pressed, level won
+    LCD.Clear(BLACK);
+    LCD.SetFontColor(WHITE);
+    LCD.WriteAt("YOU WIN!", 100, 120);
+    printf("You Win");
+    LCD.Update();
+
+    Sleep(2.0); // Pause so players see the screen
+    MainMenu(); // Go back to menu or load next level
+    }
         
-        LCD.Update();
+    LCD.Update();
     }
 
 
