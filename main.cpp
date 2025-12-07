@@ -91,7 +91,7 @@ FEHImage MainMenuBack;
 int level1Time;
 void MenuTouch();
 
-void MainMenu(){
+void MainMenu(){ // Ben Choma
    
     FEHImage MainMenuBack, Logo; // Declare background image
     MainMenuBack.Open("MainMenuBack_resized.png"); // Open Image
@@ -151,7 +151,7 @@ void MainMenu(){
 
 
 
-void Level1Select(){
+void Level1Select(){ //Ben Choma
     
     time_t start = time(NULL);
     bool level1 = true;
@@ -195,7 +195,7 @@ level1Time = end - start;
         
 }
 
-void Level2Select(){
+void Level2Select(){ // Ben Choma
     bool level2 = true;
     
     while (level2){
@@ -219,7 +219,7 @@ void Level2Select(){
     createPlayers(&x1,&y1,&x2,&y2);
 }
 
-void StatsButton(){
+void StatsButton(){ // Ben Choma & Ansh Bansal
 float x, y, trash1, trash2;
 bool b=true;
     LCD.Clear(BLACK);
@@ -319,7 +319,7 @@ bool b=true;
 }
 }
 
-void PlayButton(){ // Function to create a stats screen with back button
+void PlayButton(){ // Ben Choma
     float x, y, trash1, trash2;
     bool a=true, level1Select = false, level2Select = false;
     LCD.Clear(BLACK);
@@ -399,7 +399,7 @@ LCD.SetFontColor(LIGHTGOLDENRODYELLOW); // Draws level 2 button
     
 }
 
-void InstructionsButton(){
+void InstructionsButton(){ // Ben Choma
 float y1, z, ytrash, ztrash;
 bool c = true;
     LCD.Clear(BLACK); // Draw instructions screen
@@ -462,7 +462,7 @@ bool c = true;
     }
 }
 
-void CreditsButton(){
+void CreditsButton(){ // Ben Choma
     float y1, z, ytrash, ztrash;
     bool c = true;
     LCD.Clear(BLACK); // Draw credits game screen
@@ -497,7 +497,7 @@ void CreditsButton(){
     }
 }
 
-void MenuTouch(){
+void MenuTouch(){ // Ben Choma
 
 float x_pos, y_pos;
 float x_trash, y_trash;
@@ -820,7 +820,7 @@ void collison(int *x, int *y, int *originalHeight, bool isJumping, bool *fallSta
 
 
 const int BTN_SIZE = 30; //30
-bool isOnButtonlvl1(int px, int py, int btn1X, int btn1Y, int btn2X, int btn2Y) {
+bool isOnButtonlvl1(int px, int py, int btn1X, int btn1Y, int btn2X, int btn2Y) { // Ben Choma
     // Player sprite is 50×60, (px,py) is top-left.
     int playerFeetY = py + 60;   // feet position
     int playerCenterX = px + 25; // horizontally centered
@@ -841,7 +841,7 @@ bool isOnButtonlvl1(int px, int py, int btn1X, int btn1Y, int btn2X, int btn2Y) 
 
 }
 
-bool isOnButtonlvl2(int px2, int py2, int btn3X, int btn3Y, int btn4X, int btn4Y){
+bool isOnButtonlvl2(int px2, int py2, int btn3X, int btn3Y, int btn4X, int btn4Y){ // Ben Choma
     int playerFeet2Y = py2 + 60;
     int playerCenter2X = px2 + 25;
 
@@ -898,7 +898,7 @@ void wallCollision(int *x, int *y) {
 }
 
 
-int main(){
+int main(){ // Ben Choma & Ansh Bansal
     //MainMenu();    //starting positions 
     int deathMessageTimer = 1000;
     
