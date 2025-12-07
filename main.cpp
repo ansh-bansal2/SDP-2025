@@ -197,21 +197,22 @@ void Level2Select(){
     while (level2){
          Level1Background.Draw(0, 0);
        
-        Platform.Draw(-50, 85); //Spawn rock guy on this platform
+        Platform.Draw(-73, 85); //Spawn rock guy on this platform
        
-        Platform2.Draw(162, 105); // Spawn tree girl on this platform
-        Platform.Draw(162, 45);
-        Platform2.Draw(-52, -20);
-        Platform2.Draw(162, -55);
-        Platform.Draw(-50, -75);
+        Platform2.Draw(180, 105); // Spawn tree girl on this platform
+        Platform.Draw(180, 45);
+        Platform2.Draw(-73, -10);
+        Platform2.Draw(180, -55);
+        Platform.Draw(-73, -75);
        
-        Button.Draw(41, 0);
+        Button.Draw(18, 0);
        
-        Button.Draw(255, 28);
+        Button.Draw(273, 28);
 
 
         level2 = false;
     }
+    createPlayers(&x1,&y1,&x2,&y2);
 }
 
 void StatsButton(){
@@ -325,7 +326,7 @@ bool b=true;
 
 void PlayButton(){ // Function to create a stats screen with back button
     float x, y, trash1, trash2;
-    bool a=true, level1Select = true, level2Select = true;
+    bool a=true, level1Select = false, level2Select = false;
     LCD.Clear(BLACK);
     FEHImage MainMenuBack; // Declare background image
     MainMenuBack.Open("MainMenuBack_resized.png"); // Open Image
@@ -360,7 +361,7 @@ LCD.SetFontColor(LIGHTGOLDENRODYELLOW); // Draws level 2 button
     LCD.WriteAt("Back", 255, 12);
 
     
-    while (level1Select){  // ADD LEVEL 1 INFO HERE
+    while (a){  // ADD LEVEL 1 INFO HERE
         while(!LCD.Touch(&x, &y)){};
     while(LCD.Touch(&trash1, &trash2)){};
     if (x >= 4 && y >= 5 && x <= 94 && y <= 40){ // Check level 1 pressed
@@ -374,6 +375,10 @@ LCD.SetFontColor(LIGHTGOLDENRODYELLOW); // Draws level 2 button
     if (x >= 4 && y >= 45 && x <= 94 && y <= 80){ // Check level 2 pressed
         a = false;
         currentLevel = 2;
+        x2 = 260;
+        y2 = 180;
+        x1 = 8;
+        y1 = 150;
         Level2Select();
 
         level2Select = false;
@@ -548,12 +553,14 @@ void PlayerOneMovement(int *x1,int *y1){
     //Modify to change player movement
     int movementSpeed = 5;
 
-    //failsafe
+    //failsafe for level 1
+    if(currentLevel == 1){
     if(*y1 > 180){
     *y1 = 180;
     playerOneFall = false;
     playerOneJump = false;
    }
+}
        //Jump
 
     if(Keyboard.isPressed(KEY_W) && !playerOneJump && !playerOneFall){
@@ -623,12 +630,14 @@ void PlayerTwoMovement(int *x2,int *y2){
     //Modify to change player movement
     int movementSpeed = 5;
 
-    //failsafe
+    //failsafe for level 1
+    if(currentLevel ==1){
     if(*y2 > 180){
     *y2 = 180;
     playerTwoFall = false;
     playerTwoJump = false;
    }
+}
        //Jump
 
     if(Keyboard.isPressed(KEY_UP) && !playerTwoJump && !playerTwoFall){
@@ -711,8 +720,12 @@ void createPlayers(int *x1, int *y1, int *x2, int *y2){
 
 
 void collison(int *x, int *y, int *originalHeight, bool isJumping, bool *fallStatus) {
-    int groundHeight = 180;
-    int nearestPlatform = groundHeight;      
+    //Checking collisons for level 1
+    int groundHeight;
+    int nearestPlatform;
+    if(currentLevel ==1){
+    groundHeight = 180;
+    nearestPlatform = groundHeight;      
     
     int l1xpos[2] = {97, 265};
     int l1ypos = 175 - 50; 
@@ -749,6 +762,67 @@ void collison(int *x, int *y, int *originalHeight, bool isJumping, bool *fallSta
         onPlatform = false;
     }
 }
+
+    //Checking collisions for Level 2
+    if(currentLevel ==2){
+
+    groundHeight = 250;
+    nearestPlatform = groundHeight;      
+    
+    int l2xpos[6] = {2,262,262,2,262,2};
+    int l2ypos[6] = {200-50,230-50,162-50,115-50,70-50,41-50}; 
+
+    bool currentlyOverPlatform = false;
+    //Check to see if we are on a platform
+    printf("X: %d      ", *x);
+    printf("Y: %d\n",*y);
+    for(int j = 0; j < 6; j++) {
+        bool overPlatformX = (*x < l2xpos[j] + 33) && (*x > l2xpos[j] - 25);
+        if (overPlatformX) {
+            currentlyOverPlatform = true; 
+            if ((*y > l2ypos[j] - fallSpeed) && (*y <= l2ypos[j] + fallSpeed )) {
+                nearestPlatform = l2ypos[j]; 
+                *y = l2ypos[j]; 
+                *originalHeight = l2ypos[j]; 
+                *fallStatus = false;
+                onPlatform = true;
+                 return; 
+            }
+        }
+    }
+    //if we are on a platform and not jumping then we are no longer on a platform and we fall
+    if (onPlatform && !currentlyOverPlatform && !isJumping) {
+        onPlatform = false;
+        *fallStatus = true;
+        *originalHeight = groundHeight; 
+    }
+    //If we are above the ground then we set location to the ground
+    if (*y >= groundHeight) {
+        *y = groundHeight; 
+        *fallStatus = false;
+        *originalHeight = groundHeight;
+        onPlatform = false;
+    }
+
+    //Check for user deaths
+    if(*y >= 240){
+        if(y1 >= 240){
+            p1.AddDeath();
+            playerOneDeath = true;
+        }
+        else{
+            p2.AddDeath();
+            playerTwoDeath = true;
+        }
+        x2 = 260;
+        y2 = 180;
+        x1 = 8;
+        y1 = 150;
+        }
+    }
+
+    }
+
 
 const int BTN_SIZE = 30;
 bool isOnButtonlvl1(int px, int py, int btn1X, int btn1Y, int btn2X, int btn2Y) {
@@ -831,8 +905,7 @@ int main(){
     //Lvl1Complete.Open("Level 1 Complete_resized.png")
     MainMenu();
 
-    while(currentLevel = 1){
-        //printf("Y: %d\n", y1);
+    while(currentLevel == 1){
         Level1Select();
         wallCollision(&x1,&y1);
         wallCollision(&x2, &y2);
@@ -856,11 +929,15 @@ int main(){
             LCD.Clear(BLACK);
             LCD.SetFontColor(WHITE);
             LCD.WriteAt("YOU WIN!", 100, 120);
-            printf("You Win");
+            //printf("You Win");
             p1.AddWin();
             p2.AddWin();
             Lvl1Complete.Open("Level 1 Complete_resized.png");
             Lvl1Complete.Draw(0,0);
+            x1 = 130;
+            y1 = 180;
+            x2 = 150;
+            y1 = 180;
             Lvl1Complete.Close();
             LCD.Update();
 
@@ -887,6 +964,35 @@ int main(){
         }
         
     LCD.Update();
+    }
+
+    while(currentLevel == 2){
+
+        Level2Select();
+        PlayerOneMovement(&x1,&y1);
+        PlayerTwoMovement(&x2,&y2);
+
+         if(playerOneDeath){
+            LCD.WriteAt("Player One Died!",70,0);
+            deathMessageTimer -= 20;
+            if(deathMessageTimer <= 0){
+                playerOneDeath = false;
+                deathMessageTimer = 2000;
+            }
+
+        }
+        else if(playerTwoDeath){
+            LCD.WriteAt("Player Two Died!",70,0);
+            deathMessageTimer -= 20;
+            if(deathMessageTimer <= 0){
+                playerTwoDeath = false;
+                deathMessageTimer = 2000;
+            }
+        }
+
+        LCD.Update();
+
+
     }
 
 
