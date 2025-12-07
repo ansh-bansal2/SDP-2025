@@ -28,6 +28,14 @@ int buttonX1 = 114;   // example position
 int buttonY1 = 163;
 int buttonX2 = 282;   // second button
 int buttonY2 = 163;
+int buttonX3 = 16;
+int buttonY3 = 18;
+int buttonX4 = 270;
+int buttonY4 = 50;
+int x3 = 20; 
+int y3 = 15;
+int x4 = 275; 
+int y4 = 47;
 
 
 class player { //Class which tracks player stats
@@ -189,11 +197,7 @@ level1Time = end - start;
 
 void Level2Select(){
     bool level2 = true;
-    /*FEHImage level2Background;
-    FEHImage CloudBase;
-    FEHImage Platform, Platform2;
-    FEHImage Pillar, Button;*/
-   
+    
     while (level2){
          Level1Background.Draw(0, 0);
        
@@ -208,7 +212,7 @@ void Level2Select(){
         Button.Draw(18, 0);
        
         Button.Draw(273, 28);
-
+        
 
         level2 = false;
     }
@@ -228,16 +232,7 @@ bool b=true;
     LCD.SetFontColor(SLATEGRAY);
     LCD.WriteAt("Statistics:", 0, 0);
 
-   /* LCD.SetFontColor(BLACK);
-    LCD.WriteAt("Time to Complete:", 1, 20);  // Add object for updating stats here
-    LCD.SetFontColor(SLATEGRAY);
-    LCD.WriteAt("Time to Complete:", 0, 19); */
-
-    /*LCD.SetFontColor(BLACK);
-    LCD.WriteAt("100 Seconds", 1, 40);
-    LCD.SetFontColor(SLATEGRAY);
-    LCD.WriteAt("100 Seconds", 0, 39); */
-    //LCD.WriteLine(level1Time); // Add timer result here
+   
 
     //Player One Stats
     LCD.SetFontColor(BLACK);
@@ -824,9 +819,9 @@ void collison(int *x, int *y, int *originalHeight, bool isJumping, bool *fallSta
     }
 
 
-const int BTN_SIZE = 30;
+const int BTN_SIZE = 30; //30
 bool isOnButtonlvl1(int px, int py, int btn1X, int btn1Y, int btn2X, int btn2Y) {
-    // Player sprite is 50×60, and (px,py) is top-left.
+    // Player sprite is 50×60, (px,py) is top-left.
     int playerFeetY = py + 60;   // feet position
     int playerCenterX = px + 25; // horizontally centered
     
@@ -834,22 +829,37 @@ bool isOnButtonlvl1(int px, int py, int btn1X, int btn1Y, int btn2X, int btn2Y) 
     // Check button 1
     bool onBtn1 =
         (playerCenterX >= btn1X && playerCenterX <= btn1X + BTN_SIZE) &&
-        (playerFeetY  >= btn1Y && playerFeetY  <= btn1Y + BTN_SIZE);
+        (playerFeetY  >= btn1Y && playerFeetY <= btn1Y + BTN_SIZE);
 
     // Check button 2
     bool onBtn2 =
         (playerCenterX >= btn2X && playerCenterX <= btn2X + BTN_SIZE) &&
-        (playerFeetY  >= btn2Y && playerFeetY  <= btn2Y + BTN_SIZE);
+        (playerFeetY  >= btn2Y && playerFeetY <= btn2Y + BTN_SIZE);
 
     // Either button counts as "on a button"
     return onBtn1 || onBtn2;
 
 }
 
-int BTN1_X = 116; //Button positions for hitboxes
-int BTN1_Y = 163;
-int BTN2_X = 284;
-int BTN2_Y = 163;
+bool isOnButtonlvl2(int px2, int py2, int btn3X, int btn3Y, int btn4X, int btn4Y){
+    int playerFeet2Y = py2 + 60;
+    int playerCenter2X = px2 + 25;
+
+    //Check button 1 of lvl 2
+    bool onBtn3 = 
+    (playerCenter2X >= btn3X && playerCenter2X <= btn3X + BTN_SIZE) &&
+    (playerFeet2Y >= btn3Y && playerFeet2Y <= btn3Y + BTN_SIZE);
+
+    // Check button 2 of lvl 2
+    bool onBtn4 = 
+    (playerCenter2X >= btn4X && playerCenter2X <= btn4X + BTN_SIZE) &&
+    (playerFeet2Y >= btn4Y && playerFeet2Y <= btn4Y + BTN_SIZE);
+    
+    // Either button counts as "on a button"
+    return onBtn3 || onBtn4;
+}
+
+
 // Returns true if movement is blocked by a wall
 void wallCollision(int *x, int *y) {
     int wallXLeft = 165;
@@ -900,9 +910,7 @@ int main(){
     Button.Open("Button.png");
     Arrow.Open("Arrow.png"); 
     Spike.Open("Crystal_Shard.png");
-    // Level 2 Files, breaks if ran currently
-    //Platformlvl2.Open("CloudPlat1.png");
-    //Lvl1Complete.Open("Level 1 Complete_resized.png")
+    
     MainMenu();
 
     while(currentLevel == 1){
@@ -929,7 +937,7 @@ int main(){
             LCD.Clear(BLACK);
             LCD.SetFontColor(WHITE);
             LCD.WriteAt("YOU WIN!", 100, 120);
-            //printf("You Win");
+            
             p1.AddWin();
             p2.AddWin();
             Lvl1Complete.Open("Level 1 Complete_resized.png");
@@ -972,6 +980,35 @@ int main(){
         PlayerOneMovement(&x1,&y1);
         PlayerTwoMovement(&x2,&y2);
 
+        bool p1OnButton2 = isOnButtonlvl2(x1, y1, buttonX3, buttonY3, buttonX4, buttonY4);
+        bool p2OnButton2 = isOnButtonlvl2(x2, y2, buttonX3, buttonY3, buttonX4, buttonY4);
+
+// Both buttons must be pressed at the same time:
+        bool leftPressed2  = isOnButtonlvl2(x1, y1, buttonX3, buttonY3, buttonX3, buttonY3) ||
+                    isOnButtonlvl2(x2, y2, buttonX3, buttonY3, buttonX3, buttonY3);
+
+        bool rightPressed2 = isOnButtonlvl2(x1, y1, buttonX4, buttonY4, buttonX4, buttonY4) ||
+                    isOnButtonlvl2(x2, y2, buttonX4, buttonY4, buttonX4, buttonY4);
+
+if(leftPressed2 && rightPressed2) { // If 2 buttons pressed, level won
+            LCD.Clear(BLACK);
+            LCD.SetFontColor(WHITE);
+            LCD.WriteAt("YOU WIN!", 100, 120);
+            //printf("You Win");
+            p1.AddWin();
+            p2.AddWin();
+            Lvl1Complete.Open("Level 1 Complete_resized.png");
+            Lvl1Complete.Draw(0,0);
+            x1 = 130;
+            y1 = 180;
+            x2 = 150;
+            y1 = 180;
+            Lvl1Complete.Close();
+            LCD.Update();
+
+            Sleep(3.0); // Pause so players see screen
+            MainMenu(); // Go back to menu or load next level ADD LATER
+}
          if(playerOneDeath){
             LCD.WriteAt("Player One Died!",70,0);
             deathMessageTimer -= 20;
