@@ -751,15 +751,12 @@ void collison(int *x, int *y, int *originalHeight, bool isJumping, bool *fallSta
 }
 
 const int BTN_SIZE = 30;
-bool isOnButton(int px, int py, int btn1X, int btn1Y, int btn2X, int btn2Y) {
+bool isOnButtonlvl1(int px, int py, int btn1X, int btn1Y, int btn2X, int btn2Y) {
     // Player sprite is 50×60, and (px,py) is top-left.
     int playerFeetY = py + 60;   // feet position
     int playerCenterX = px + 25; // horizontally centered
     
-   /* bool xOverlap = (playerCenterX >= btnX) && (playerCenterX <= btnX + BTN_SIZE);
-    bool yOverlap = (playerFeetY >= btnY) && (playerFeetY <= btnY + BTN_SIZE);
-
-    return xOverlap && yOverlap;*/
+   
     // Check button 1
     bool onBtn1 =
         (playerCenterX >= btn1X && playerCenterX <= btn1X + BTN_SIZE) &&
@@ -843,17 +840,16 @@ int main(){
         PlayerOneMovement(&x1,&y1);
         PlayerTwoMovement(&x2,&y2);
 
-        //bool p1OnBtn = isOnButton(x1, y1, BTN1_X, BTN1_Y); // Check position
-        //bool p2OnBtn = isOnButton(x2, y2, BTN2_X, BTN2_Y);
-        bool p1OnButton = isOnButton(x1, y1, buttonX1, buttonY1, buttonX2, buttonY2);
-        bool p2OnButton = isOnButton(x2, y2, buttonX1, buttonY1, buttonX2, buttonY2);
+        
+        bool p1OnButton = isOnButtonlvl1(x1, y1, buttonX1, buttonY1, buttonX2, buttonY2);
+        bool p2OnButton = isOnButtonlvl1(x2, y2, buttonX1, buttonY1, buttonX2, buttonY2);
 
-// BOTH buttons must be pressed at the same time:
-        bool leftPressed  = isOnButton(x1, y1, buttonX1, buttonY1, buttonX1, buttonY1) ||
-                    isOnButton(x2, y2, buttonX1, buttonY1, buttonX1, buttonY1);
+    // Both buttons must be pressed at the same time:
+        bool leftPressed  = isOnButtonlvl1(x1, y1, buttonX1, buttonY1, buttonX1, buttonY1) ||
+                    isOnButtonlvl1(x2, y2, buttonX1, buttonY1, buttonX1, buttonY1);
 
-        bool rightPressed = isOnButton(x1, y1, buttonX2, buttonY2, buttonX2, buttonY2) ||
-                    isOnButton(x2, y2, buttonX2, buttonY2, buttonX2, buttonY2);
+        bool rightPressed = isOnButtonlvl1(x1, y1, buttonX2, buttonY2, buttonX2, buttonY2) ||
+                    isOnButtonlvl1(x2, y2, buttonX2, buttonY2, buttonX2, buttonY2);
 
 
         if(leftPressed && rightPressed) { // If 2 buttons pressed, level won
