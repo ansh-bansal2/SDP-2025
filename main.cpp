@@ -2,6 +2,7 @@
 #include "FEHUtility.h"
 #include "FEHKeyboard.h"
 #include "FEHImages.h"
+//All global variables 
 int jumpSpeed = 9;
 int fallSpeed = 6;
 int jumpHeight = 50;
@@ -12,8 +13,10 @@ int p2targetHeight = 0;
 int currentLevel = 0;
 bool playerOneDeath = false;
 bool playerTwoDeath = false;
+//Initial starting positions
 int x1 = 100, y1 = 180;
 int x2 = 150, y2 = 180;
+//Image pointers
 FEHImage rockGuy;
 FEHImage treeGirl;
 FEHImage Level1Background;
@@ -38,7 +41,7 @@ int x4 = 275;
 int y4 = 47;
 
 
-class player { //Class which tracks player stats
+class player { //Class which tracks player stats written by Ansh Bansal
 private:
     int jumps;
     int deaths;
@@ -69,7 +72,7 @@ public:
 player p1; //rock
 player p2; //root
 
-
+//Function prototypes
 void Lvl1buttons();
 void PlayerOneMovement(int *x1,int *y1);
     bool playerOneJump = false;
@@ -84,6 +87,10 @@ void collison(int *xpos, int *ypos, int *origHeight,bool jumpStatus,bool *fallSt
 bool onPlatform = false;
 
 void wallCollision(int *x, int *y);
+
+void InitLevel1();
+
+void InitLevel2();
 
 
 #include <time.h>
@@ -152,54 +159,28 @@ void MainMenu(){ // Ben Choma
 
 
 void Level1Select(){ //Ben Choma
-    
-    time_t start = time(NULL);
+    currentLevel = 1;
     bool level1 = true;
         while(level1){
-        //Level1Background.Open("level1Background_resized.png");
         Level1Background.Draw(0, 0);
-        //Level1Background.Close();
-        //CloudBase.Open("CloudBase.png");
         CloudBase.Draw(0, 0);
-        //CloudBase.Close();
-        //Platform.Open("CloudPlat1.png");
         Platform.Draw(20, 60);
-        //Platform.Close();
-        //Platform2.Open("CloudPlat2.png");
         Platform2.Draw(185, 50);
-        //Platform2.Close(); // Add wall and arrow to show characters wrap around and encourage teamwork
-       // Pillar.Open("CloudPillar.png");
         Pillar.Draw(180, 82);
-        //Pillar.Close();
-        //Button.Open("Button.png");
         Button.Draw(110, 137);
-        //Button.Close();
-       // Button.Open("Button.png");
         Button.Draw(278, 137);
-        //Button.Close();
-        //Arrow.Open("Arrow.png");
         Arrow.Draw(-15, 80);
-        //Arrow.Close();
         Spike.Draw(30,205);
-        
         level1 = false;
         }
         createPlayers(&x1,&y1,&x2,&y2);
-        
-
-        
-
-time_t end = time(NULL); // Timer to compute time spend on level 1
-level1Time = end - start;
-//printf("%i", level1Time); // print to check timer is working
-        
 }
 
 void Level2Select(){ // Ben Choma
     bool level2 = true;
-    
+    currentLevel = 2;
     while (level2){
-         Level1Background.Draw(0, 0);
+        Level1Background.Draw(0, 0);
        
         Platform.Draw(-73, 85); //Spawn rock guy on this platform
        
@@ -213,7 +194,6 @@ void Level2Select(){ // Ben Choma
        
         Button.Draw(273, 28);
         
-
         level2 = false;
     }
     createPlayers(&x1,&y1,&x2,&y2);
@@ -362,8 +342,8 @@ LCD.SetFontColor(LIGHTGOLDENRODYELLOW); // Draws level 2 button
     if (x >= 4 && y >= 5 && x <= 94 && y <= 40){ // Check level 1 pressed
         a = false;
         currentLevel = 1;
+        InitLevel1();
         Level1Select(); // Call level select function to create level 1
-
         level1Select = false;
     }
 
@@ -374,14 +354,12 @@ LCD.SetFontColor(LIGHTGOLDENRODYELLOW); // Draws level 2 button
         y2 = 180;
         x1 = 8;
         y1 = 150;
+        InitLevel2();
         Level2Select();
-
         level2Select = false;
 }
 
     while(a){
-        printf("b");
-
     while(!LCD.Touch(&x, &y)){};
     while(LCD.Touch(&trash1, &trash2)){};
     if (x >= 250 && y >= 5){
@@ -542,8 +520,28 @@ while(onMenu){
 
 }
 
+void InitLevel1() { //Ansh Bansal
+    currentLevel = 1;
 
-void PlayerOneMovement(int *x1,int *y1){
+    //starting positions
+    x1 = 100; 
+    y1 = 180;
+    x2 = 150; 
+    y2 = 180;
+}
+
+void InitLevel2() { //Ansh Bansal
+    currentLevel = 2;
+
+    //starting positions
+    x1 = 8; 
+    y1 = 150;
+    x2 = 260; 
+    y2 = 180;
+}
+
+
+void PlayerOneMovement(int *x1,int *y1){ //Ansh Bansal
 
     //Modify to change player movement
     int movementSpeed = 5;
@@ -569,27 +567,17 @@ void PlayerOneMovement(int *x1,int *y1){
     if(Keyboard.isPressed(KEY_A)){
         *x1 -= movementSpeed;
         collison(x1,y1,&p1originalHeight,playerOneJump,&playerOneFall);
-
-
-       // rockGuy.Draw(*x1, *y1);
     }
     //Right
     if(Keyboard.isPressed(KEY_D)){
         *x1 += movementSpeed;
-        collison(x1,y1,&p1originalHeight,playerOneJump,&playerOneFall);
-
-
-
-        //rockGuy.Draw(*x1, *y1);
+        collison(x1,y1,&p1originalHeight,playerOneJump,&playerOneFall); 
     }
     
     if(playerOneJump && *y1 > p1targetHeight){
-
         *y1 -= jumpSpeed;
-
-        //rockGuy.Draw(*x1, *y1);
-
     }
+
     else if(playerOneJump && *y1 <= p1targetHeight){
         playerOneJump = false;
         playerOneFall = true;
@@ -600,11 +588,8 @@ void PlayerOneMovement(int *x1,int *y1){
     if(playerOneFall && *y1 < p1originalHeight){
         collison(x1,y1,&p1originalHeight,playerOneJump,&playerOneFall);
         *y1 += fallSpeed;
-
-        //rockGuy.Draw(*x1, *y1);
-
-
     }
+
     else if(playerOneFall && *y1 >= p1originalHeight){
         collison(x1,y1,&p1originalHeight,playerOneJump,&playerOneFall);
         playerOneFall = false;
@@ -620,7 +605,7 @@ void PlayerOneMovement(int *x1,int *y1){
     }
         
 }
-void PlayerTwoMovement(int *x2,int *y2){
+void PlayerTwoMovement(int *x2,int *y2){ //Ansh Bansal
 
     //Modify to change player movement
     int movementSpeed = 5;
@@ -646,27 +631,17 @@ void PlayerTwoMovement(int *x2,int *y2){
     if(Keyboard.isPressed(KEY_LEFT)){
         *x2 -= movementSpeed;
         collison(x2,y2,&p2originalHeight,playerTwoJump,&playerTwoFall);
-
-
-        treeGirl.Draw(*x2, *y2);
     }
     //Right
     if(Keyboard.isPressed(KEY_RIGHT)){
         *x2 += movementSpeed;
         collison(x2,y2,&p2originalHeight,playerTwoJump,&playerTwoFall);
-
-
-
-        treeGirl.Draw(*x2, *y2);
     }
     
     if(playerTwoJump && *y2 > p2targetHeight){
-
         *y2 -= jumpSpeed;
-
-        treeGirl.Draw(*x2, *y2);
-
     }
+
     else if(playerTwoJump && *y2 <= p2targetHeight){
         playerTwoJump = false;
         playerTwoFall = true;
@@ -676,11 +651,8 @@ void PlayerTwoMovement(int *x2,int *y2){
     if(playerTwoFall && *y2 < p2originalHeight){
         collison(x2,y2,&p2originalHeight,playerTwoJump,&playerTwoFall);
         *y2 += fallSpeed;
-
-        treeGirl.Draw(*x2, *y2);
-
-
     }
+
     else if(playerTwoFall && *y2 >= p2originalHeight){
         collison(x2,y2,&p2originalHeight,playerTwoJump,&playerTwoFall);
         playerTwoFall = false;
@@ -698,23 +670,18 @@ void PlayerTwoMovement(int *x2,int *y2){
 
 
 
-void createPlayers(int *x1, int *y1, int *x2, int *y2){
+void createPlayers(int *x1, int *y1, int *x2, int *y2){ // Ansh Bansal
     //Creates players at location, should be called in the level select function.
     //50 x 60 pixels
-    rockGuy.Open("Rock_guy_front.png");
-    treeGirl.Open("Tree_Girl_Front.png");
     rockGuy.Draw(*x1,*y1);
-    treeGirl.Draw(*x2,*y2);
-
-
-    
+    treeGirl.Draw(*x2,*y2);    
     
     LCD.Update();
 }
 
 
 
-void collison(int *x, int *y, int *originalHeight, bool isJumping, bool *fallStatus) {
+void collison(int *x, int *y, int *originalHeight, bool isJumping, bool *fallStatus) { //Ansh Bansal
     //Checking collisons for level 1
     int groundHeight;
     int nearestPlatform;
@@ -727,8 +694,6 @@ void collison(int *x, int *y, int *originalHeight, bool isJumping, bool *fallSta
 
     bool currentlyOverPlatform = false;
     //Check to see if we are on a platform
-    printf("X: %d      ", *x);
-    printf("Y: %d\n",*y);
     for(int i = 0; i < 2; i++) {
         bool overPlatformX = (*x < l1xpos[i] + 25) && (*x > l1xpos[i] - 25);
         if (overPlatformX) {
@@ -769,8 +734,6 @@ void collison(int *x, int *y, int *originalHeight, bool isJumping, bool *fallSta
 
     bool currentlyOverPlatform = false;
     //Check to see if we are on a platform
-    printf("X: %d      ", *x);
-    printf("Y: %d\n",*y);
     for(int j = 0; j < 6; j++) {
         bool overPlatformX = (*x < l2xpos[j] + 33) && (*x > l2xpos[j] - 25);
         if (overPlatformX) {
@@ -860,12 +823,12 @@ bool isOnButtonlvl2(int px2, int py2, int btn3X, int btn3Y, int btn4X, int btn4Y
 }
 
 
-// Returns true if movement is blocked by a wall
-void wallCollision(int *x, int *y) {
+void wallCollision(int *x, int *y) { //Ansh Bansal
     int wallXLeft = 165;
     int wallXRight = 215;
     int wallY = 50;
     int wallHeight = 100;
+    //Checks which side of the screen the user is on and if they touch the wall, dont let them move past it
     if(*x < wallXLeft + 10 && *x >= 0){
         if(*x >= wallXLeft){
         *x = wallXLeft;
@@ -899,9 +862,10 @@ void wallCollision(int *x, int *y) {
 
 
 int main(){ // Ben Choma & Ansh Bansal
-    //MainMenu();    //starting positions 
+    MainMenu();    //starting positions 
     int deathMessageTimer = 1000;
     
+    //Open all the image files
     Level1Background.Open("level1Background_resized.png"); // Level 1 files
     CloudBase.Open("CloudBase.png");
     Platform.Open("CloudPlat1.png");
@@ -910,9 +874,11 @@ int main(){ // Ben Choma & Ansh Bansal
     Button.Open("Button.png");
     Arrow.Open("Arrow.png"); 
     Spike.Open("Crystal_Shard.png");
+    rockGuy.Open("Rock_guy_front.png");
+    treeGirl.Open("Tree_Girl_Front.png");
     
-    MainMenu();
-
+    while(true){
+    //If the level is level 1, start player movement, collisions, check for completion, and check for death
     while(currentLevel == 1){
         Level1Select();
         wallCollision(&x1,&y1);
@@ -945,10 +911,11 @@ int main(){ // Ben Choma & Ansh Bansal
             x1 = 130;
             y1 = 180;
             x2 = 150;
-            y1 = 180;
+            y2 = 180;
             Lvl1Complete.Close();
             LCD.Update();
-
+            playerOneJump = false;
+            playerTwoJump = false;
             Sleep(3.0); // Pause so players see screen
             MainMenu(); // Go back to menu or load next level ADD LATER
         }
@@ -974,6 +941,7 @@ int main(){ // Ben Choma & Ansh Bansal
     LCD.Update();
     }
 
+    //If the level is level 2, start player movement, collisions, check for completion, and check for death
     while(currentLevel == 2){
 
         Level2Select();
@@ -983,29 +951,29 @@ int main(){ // Ben Choma & Ansh Bansal
         bool p1OnButton2 = isOnButtonlvl2(x1, y1, buttonX3, buttonY3, buttonX4, buttonY4);
         bool p2OnButton2 = isOnButtonlvl2(x2, y2, buttonX3, buttonY3, buttonX4, buttonY4);
 
-// Both buttons must be pressed at the same time:
+        // Both buttons must be pressed at the same time:
         bool leftPressed2  = isOnButtonlvl2(x1, y1, buttonX3, buttonY3, buttonX3, buttonY3) ||
-                    isOnButtonlvl2(x2, y2, buttonX3, buttonY3, buttonX3, buttonY3);
+        isOnButtonlvl2(x2, y2, buttonX3, buttonY3, buttonX3, buttonY3);
 
         bool rightPressed2 = isOnButtonlvl2(x1, y1, buttonX4, buttonY4, buttonX4, buttonY4) ||
-                    isOnButtonlvl2(x2, y2, buttonX4, buttonY4, buttonX4, buttonY4);
+        isOnButtonlvl2(x2, y2, buttonX4, buttonY4, buttonX4, buttonY4);
 
-if(leftPressed2 && rightPressed2) { // If 2 buttons pressed, level won
+        if(leftPressed2 && rightPressed2) { // If 2 buttons pressed, level won
             LCD.Clear(BLACK);
             LCD.SetFontColor(WHITE);
             LCD.WriteAt("YOU WIN!", 100, 120);
-            //printf("You Win");
             p1.AddWin();
             p2.AddWin();
             Lvl1Complete.Open("Level 1 Complete_resized.png");
             Lvl1Complete.Draw(0,0);
-            x1 = 130;
-            y1 = 180;
-            x2 = 150;
-            y1 = 180;
+            x1 = 8;
+            y1 = 150;
+            x2 = 260;
+            y2 = 180;
             Lvl1Complete.Close();
             LCD.Update();
-
+            playerOneJump = false;
+            playerTwoJump = false;
             Sleep(3.0); // Pause so players see screen
             MainMenu(); // Go back to menu or load next level ADD LATER
 }
@@ -1034,5 +1002,5 @@ if(leftPressed2 && rightPressed2) { // If 2 buttons pressed, level won
 
 
 
-
+}
 }
