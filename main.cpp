@@ -51,6 +51,7 @@ public:
         deaths = 0;
         wins = 0;
     }
+    //Functions which add a jump, death, or win when called
 
     void AddJump(){ 
         jumps++; }
@@ -59,6 +60,7 @@ public:
     void AddWin(){ 
         wins++; }
 
+    //getter functions
     int GetJumps(){ 
         return jumps; }
     int GetDeaths(){ 
@@ -218,6 +220,7 @@ bool b=true;
     LCD.SetFontColor(SLATEGRAY);
     LCD.WriteAt("Player 1:", 0, 19);
 
+    //Player one deaths
     LCD.SetFontColor(BLACK);
     LCD.WriteAt("Deaths: ", 1, 39);
     int deaths = p1.GetDeaths();
@@ -226,7 +229,7 @@ bool b=true;
     LCD.WriteAt("Deaths: ", 0, 38);
     LCD.WriteAt(deaths, 90,38);
 
-
+    //Player one jumps
     LCD.SetFontColor(BLACK);
     LCD.WriteAt("Jumps: ", 1, 58);
     int jumps = p1.GetJumps();
@@ -235,6 +238,7 @@ bool b=true;
     LCD.WriteAt("Jumps: ", 0, 57);
     LCD.WriteAt(jumps, 80,57);
 
+    //Player one Wins
     LCD.SetFontColor(BLACK);
     LCD.WriteAt("Wins: ", 1, 77);
     int wins = p1.GetWins();
@@ -244,12 +248,12 @@ bool b=true;
     LCD.WriteAt(wins, 65,76);
 
     //Player Two Stats
-
     LCD.SetFontColor(BLACK);
     LCD.WriteAt("Player 2:", 1, 96 + 19);  
     LCD.SetFontColor(SLATEGRAY);
     LCD.WriteAt("Player 2:", 0, 95 + 19);
 
+    //Player Two Deaths
     LCD.SetFontColor(BLACK);
     LCD.WriteAt("Deaths: ", 1, 115 + 19);
     int deaths2 = p2.GetDeaths();
@@ -258,7 +262,7 @@ bool b=true;
     LCD.WriteAt("Deaths: ", 0, 114 + 19);
     LCD.WriteAt(deaths2, 90,114 + 19);
 
-
+    //Player Two Jumps
     LCD.SetFontColor(BLACK);
     LCD.WriteAt("Jumps: ", 1, 134 + 19);
     int jumps2 = p2.GetJumps();
@@ -267,6 +271,7 @@ bool b=true;
     LCD.WriteAt("Jumps: ", 0, 133 + 19);
     LCD.WriteAt(jumps2, 80,133 + 19);
 
+    //Player Two Wins
     LCD.SetFontColor(BLACK);
     LCD.WriteAt("Wins: ", 1, 153 + 19);
     int wins2 = p2.GetWins();
@@ -517,7 +522,7 @@ while(onMenu){
 }
 
 }
-
+//This function initates the start of level 1
 void InitLevel1() { //Ansh Bansal
     currentLevel = 1;
 
@@ -527,7 +532,7 @@ void InitLevel1() { //Ansh Bansal
     x2 = 150; 
     y2 = 180;
 }
-
+//This function initates the start of level 2
 void InitLevel2() { //Ansh Bansal
     currentLevel = 2;
 
@@ -552,8 +557,7 @@ void PlayerOneMovement(int *x1,int *y1){ //Ansh Bansal
     playerOneJump = false;
    }
 }
-       //Jump
-
+    //Jump
     if(Keyboard.isPressed(KEY_W) && !playerOneJump && !playerOneFall){
         p1.AddJump();
         playerOneJump = true;
@@ -561,28 +565,31 @@ void PlayerOneMovement(int *x1,int *y1){ //Ansh Bansal
         p1targetHeight = *y1 - jumpHeight;
     }
 
-    //left
+    //move left
     if(Keyboard.isPressed(KEY_A)){
         *x1 -= movementSpeed;
         collison(x1,y1,&p1originalHeight,playerOneJump,&playerOneFall);
     }
-    //Right
+    //move right
     if(Keyboard.isPressed(KEY_D)){
         *x1 += movementSpeed;
         collison(x1,y1,&p1originalHeight,playerOneJump,&playerOneFall); 
     }
     
+    //make the player jump until they reach the target height
     if(playerOneJump && *y1 > p1targetHeight){
         *y1 -= jumpSpeed;
     }
 
+    //if the player is at the top of the jump, make them fall
     else if(playerOneJump && *y1 <= p1targetHeight){
         playerOneJump = false;
         playerOneFall = true;
         collison(x1,y1,&p1originalHeight,playerOneJump,&playerOneFall);
 
     }
-    //Falling
+
+    //Falling 
     if(playerOneFall && *y1 < p1originalHeight){
         collison(x1,y1,&p1originalHeight,playerOneJump,&playerOneFall);
         *y1 += fallSpeed;
@@ -617,7 +624,6 @@ void PlayerTwoMovement(int *x2,int *y2){ //Ansh Bansal
    }
 }
        //Jump
-
     if(Keyboard.isPressed(KEY_UP) && !playerTwoJump && !playerTwoFall){
         p2.AddJump();
         playerTwoJump = true;
@@ -625,21 +631,23 @@ void PlayerTwoMovement(int *x2,int *y2){ //Ansh Bansal
         p2targetHeight = *y2 - jumpHeight;
     }
 
-    //left
+    //move left
     if(Keyboard.isPressed(KEY_LEFT)){
         *x2 -= movementSpeed;
         collison(x2,y2,&p2originalHeight,playerTwoJump,&playerTwoFall);
     }
-    //Right
+    //move right
     if(Keyboard.isPressed(KEY_RIGHT)){
         *x2 += movementSpeed;
         collison(x2,y2,&p2originalHeight,playerTwoJump,&playerTwoFall);
     }
-    
+
+    //make the player jump until they reach the target height
     if(playerTwoJump && *y2 > p2targetHeight){
         *y2 -= jumpSpeed;
     }
 
+    //if the player is at the top of the jump, make them fall
     else if(playerTwoJump && *y2 <= p2targetHeight){
         playerTwoJump = false;
         playerTwoFall = true;
@@ -669,11 +677,10 @@ void PlayerTwoMovement(int *x2,int *y2){ //Ansh Bansal
 
 
 void createPlayers(int *x1, int *y1, int *x2, int *y2){ // Ansh Bansal
-    //Creates players at location, should be called in the level select function.
-    //50 x 60 pixels
+    //Creates players at location
+    //character size is 50 x 60 pixels
     rockGuy.Draw(*x1,*y1);
     treeGirl.Draw(*x2,*y2);    
-    
     LCD.Update();
 }
 
@@ -760,7 +767,7 @@ void collison(int *x, int *y, int *originalHeight, bool isJumping, bool *fallSta
         onPlatform = false;
     }
 
-    //Check for user deaths
+    //Check for user deaths and add a death count to the player who died
     if(*y >= 240){
         if(y1 >= 240){
             p1.AddDeath();
@@ -822,6 +829,7 @@ bool isOnButtonlvl2(int px2, int py2, int btn3X, int btn3Y, int btn4X, int btn4Y
 
 
 void wallCollision(int *x, int *y) { //Ansh Bansal
+    //Wall corrdinates for level 1
     int wallXLeft = 165;
     int wallXRight = 215;
     int wallY = 50;
@@ -917,6 +925,8 @@ int main(){ // Ben Choma & Ansh Bansal
             Sleep(3.0); // Pause so players see screen
             MainMenu(); // Go back to menu or load next level ADD LATER
         }
+
+        //Depending on which player died, write a death message which displays for a certain amount of time
         if(playerOneDeath){
             LCD.WriteAt("Player One Died!",70,0);
             deathMessageTimer -= 20;
@@ -975,6 +985,7 @@ int main(){ // Ben Choma & Ansh Bansal
             Sleep(3.0); // Pause so players see screen
             MainMenu(); // Go back to menu or load next level ADD LATER
 }
+         //Depending on which player died, write a death message which displays for a certain amount of time
          if(playerOneDeath){
             LCD.WriteAt("Player One Died!",70,0);
             deathMessageTimer -= 20;
