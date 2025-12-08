@@ -27,18 +27,16 @@ FEHImage level2Background;
 FEHImage Platformlvl2;
 FEHImage Lvl1Complete;
 FEHImage Spike;
-int buttonX1 = 114;   // example position
+//More positions
+int buttonX1 = 114;   
 int buttonY1 = 163;
-int buttonX2 = 282;   // second button
+int buttonX2 = 282;   
 int buttonY2 = 163;
 int buttonX3 = 16;
-int buttonY3 = 18;
+int buttonY3 = 25;
 int buttonX4 = 270;
-int buttonY4 = 50;
-int x3 = 20; 
-int y3 = 15;
-int x4 = 275; 
-int y4 = 47;
+int buttonY4 = 55;
+
 
 
 class player { //Class which tracks player stats written by Ansh Bansal
@@ -98,7 +96,7 @@ FEHImage MainMenuBack;
 int level1Time;
 void MenuTouch();
 
-void MainMenu(){ // Ben Choma
+void MainMenu(){ // Creates the main menu screen -- Ben Choma
    
     FEHImage MainMenuBack, Logo; // Declare background image
     MainMenuBack.Open("MainMenuBack_resized.png"); // Open Image
@@ -158,7 +156,7 @@ void MainMenu(){ // Ben Choma
 
 
 
-void Level1Select(){ //Ben Choma
+void Level1Select(){ //Creates level one -- Ben Choma
     currentLevel = 1;
     bool level1 = true;
         while(level1){
@@ -176,7 +174,7 @@ void Level1Select(){ //Ben Choma
         createPlayers(&x1,&y1,&x2,&y2);
 }
 
-void Level2Select(){ // Ben Choma
+void Level2Select(){ // Creates level 2 -- Ben Choma
     bool level2 = true;
     currentLevel = 2;
     while (level2){
@@ -200,7 +198,7 @@ void Level2Select(){ // Ben Choma
 }
 
 void StatsButton(){ // Ben Choma & Ansh Bansal
-float x, y, trash1, trash2;
+float x, y, trash1, trash2; // Creates stats screen with back button, display stats for p1 and p2
 bool b=true;
     LCD.Clear(BLACK);
     MainMenuBack.Open("MainMenuBack_resized.png"); // Open Image
@@ -248,7 +246,7 @@ bool b=true;
     //Player Two Stats
 
     LCD.SetFontColor(BLACK);
-    LCD.WriteAt("Player 2:", 1, 96 + 19);  // Add object for updating stats here
+    LCD.WriteAt("Player 2:", 1, 96 + 19);  
     LCD.SetFontColor(SLATEGRAY);
     LCD.WriteAt("Player 2:", 0, 95 + 19);
 
@@ -299,7 +297,7 @@ bool b=true;
 }
 }
 
-void PlayButton(){ // Ben Choma
+void PlayButton(){ // Creates level select screen with buttons for levels and back button -- Ben Choma
     float x, y, trash1, trash2;
     bool a=true, level1Select = false, level2Select = false;
     LCD.Clear(BLACK);
@@ -377,7 +375,7 @@ LCD.SetFontColor(LIGHTGOLDENRODYELLOW); // Draws level 2 button
     
 }
 
-void InstructionsButton(){ // Ben Choma
+void InstructionsButton(){ //Prints game instructions with back button -- Ben Choma
 float y1, z, ytrash, ztrash;
 bool c = true;
     LCD.Clear(BLACK); // Draw instructions screen
@@ -440,7 +438,7 @@ bool c = true;
     }
 }
 
-void CreditsButton(){ // Ben Choma
+void CreditsButton(){ // Creates credit screen with back button Ben Choma
     float y1, z, ytrash, ztrash;
     bool c = true;
     LCD.Clear(BLACK); // Draw credits game screen
@@ -475,7 +473,7 @@ void CreditsButton(){ // Ben Choma
     }
 }
 
-void MenuTouch(){ // Ben Choma
+void MenuTouch(){ //Allows for all buttons on menu to be pressed -- Ben Choma
 
 float x_pos, y_pos;
 float x_trash, y_trash;
@@ -782,7 +780,7 @@ void collison(int *x, int *y, int *originalHeight, bool isJumping, bool *fallSta
     }
 
 
-const int BTN_SIZE = 30; //30
+const int BTN_SIZE = 30; // Both buttons can be pressed by either player, completes level 1
 bool isOnButtonlvl1(int px, int py, int btn1X, int btn1Y, int btn2X, int btn2Y) { // Ben Choma
     // Player sprite is 50×60, (px,py) is top-left.
     int playerFeetY = py + 60;   // feet position
@@ -803,7 +801,7 @@ bool isOnButtonlvl1(int px, int py, int btn1X, int btn1Y, int btn2X, int btn2Y) 
     return onBtn1 || onBtn2;
 
 }
-
+// Both buttons can be pressed by either player, completes level 2
 bool isOnButtonlvl2(int px2, int py2, int btn3X, int btn3Y, int btn4X, int btn4Y){ // Ben Choma
     int playerFeet2Y = py2 + 60;
     int playerCenter2X = px2 + 25;
@@ -866,7 +864,7 @@ int main(){ // Ben Choma & Ansh Bansal
     int deathMessageTimer = 1000;
     
     //Open all the image files
-    Level1Background.Open("level1Background_resized.png"); // Level 1 files
+    Level1Background.Open("level1Background_resized.png"); // Level 1 and 2 files
     CloudBase.Open("CloudBase.png");
     Platform.Open("CloudPlat1.png");
     Platform2.Open("CloudPlat2.png");
@@ -899,7 +897,7 @@ int main(){ // Ben Choma & Ansh Bansal
                     isOnButtonlvl1(x2, y2, buttonX2, buttonY2, buttonX2, buttonY2);
 
 
-        if(leftPressed && rightPressed) { // If 2 buttons pressed, level won
+        if(leftPressed && rightPressed) { // If 2 buttons pressed, level 1 won, update stats
             LCD.Clear(BLACK);
             LCD.SetFontColor(WHITE);
             LCD.WriteAt("YOU WIN!", 100, 120);
@@ -958,7 +956,7 @@ int main(){ // Ben Choma & Ansh Bansal
         bool rightPressed2 = isOnButtonlvl2(x1, y1, buttonX4, buttonY4, buttonX4, buttonY4) ||
         isOnButtonlvl2(x2, y2, buttonX4, buttonY4, buttonX4, buttonY4);
 
-        if(leftPressed2 && rightPressed2) { // If 2 buttons pressed, level won
+        if(leftPressed2 && rightPressed2) { // If 2 buttons pressed, level 2 won, update stats
             LCD.Clear(BLACK);
             LCD.SetFontColor(WHITE);
             LCD.WriteAt("YOU WIN!", 100, 120);
